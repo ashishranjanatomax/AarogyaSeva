@@ -7,6 +7,7 @@ import ForgetPasswordOTP from '../screen/ForgetPasswordOTP';
 import NewPassword from '../screen/NewPassword';
 import DrawerNavigation from './DrawerNavigation';
 import Outcome from '../screen/Outcome';
+import Profile from '../dashboard/Profile';
 
 const Stack = createNativeStackNavigator();
 
@@ -41,6 +42,11 @@ const AuthNavigation = () => {
       <Stack.Screen
         name="OutCome"
         component={Outcome}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="Profile"
+        component={Profile}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

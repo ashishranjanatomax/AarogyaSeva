@@ -41,6 +41,7 @@ const CustomDrawerContent = props => {
 const DrawerNavigation = () => {
   return (
     <Drawer.Navigator
+      backBehavior="initialRoute"
       initialRouteName="Job List"
       drawerContent={CustomDrawerContent}>
       <Drawer.Screen

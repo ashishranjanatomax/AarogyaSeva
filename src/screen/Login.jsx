@@ -5,18 +5,27 @@ import {
   TextInput,
   TouchableOpacity,
   Image,
+  Alert,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
+
+// Import Icons
 import Octicons from 'react-native-vector-icons/Octicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Feather from 'react-native-vector-icons/Feather';
+
+// Import Location
 import Geolocation from '@react-native-community/geolocation';
+
+// Main Function
 const Login = ({navigation}) => {
+  // Varibale declaration
   const [mobile, setMobile] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [locationEnabled, setLocationEnabled] = useState(false);
 
+  // UseEffect for Checking for loging
   useEffect(() => {
     // Check if the location is enabled
     Geolocation.getCurrentPosition(
@@ -30,10 +39,21 @@ const Login = ({navigation}) => {
     );
   }, []);
 
+  // Handle Login Function
   const handleLogin = () => {
-    navigation.navigate('DrawerNavigation');
     if (!locationEnabled) {
       Alert.alert('Location Alert', 'Please enable location services.');
+      return;
+    }
+
+    // Condition for Mobile filed
+    if (mobile.trim() === '') {
+      Alert.alert('Error', 'Please enter your mobile number');
+      return;
+    }
+    // Condition for Password testing
+    if (password.trim() === '') {
+      Alert.alert('Error', 'Please enter your password');
       return;
     }
 
@@ -44,23 +64,15 @@ const Login = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      <Text style={{fontSize: 24, fontWeight: 'bold', color: 'red'}}>
-        Aarogya Seva CRM
-      </Text>
+      <Text style={styles.title}>Aarogya Seva CRM</Text>
       <Image
         source={require('../../assests/aarogyasevalogo.png')}
         resizeMode="contain"
-        style={{width: '75%', height: 150}}
+        style={styles.image}
       />
-      {/* <FontAwesome
-        name="user"
-        size={150}
-        color="green"
-        style={{marginVertical: 25}}
-      /> */}
 
       <View style={styles.inputView}>
-        <Feather style={{marginTop: 10}} name="phone" size={24} color="gray" />
+        <Feather style={styles.icon} name="phone" size={24} color="gray" />
         <TextInput
           style={styles.input}
           placeholder="Mobile Number"
@@ -73,7 +85,7 @@ const Login = ({navigation}) => {
 
       <View style={styles.inputView}>
         <MaterialIcons
-          style={{marginTop: 10}}
+          style={styles.icon}
           name="lock-outline"
           size={24}
           color="gray"
@@ -87,7 +99,7 @@ const Login = ({navigation}) => {
           onChangeText={text => setPassword(text)}
         />
         <Octicons
-          style={{marginTop: 10}}
+          style={styles.icon}
           name={showPassword == false ? 'eye-closed' : 'eye'}
           size={24}
           color="gray"
@@ -98,20 +110,17 @@ const Login = ({navigation}) => {
       </View>
       <Text
         onPress={() => navigation.navigate('ForgetPassword')}
-        style={{
-          fontSize: 20,
-          color: 'red',
-          textAlign: 'right',
-          marginRight: 35,
-          marginVertical: 15,
-        }}>
+        style={styles.fpassword}>
         Forget Password ?
       </Text>
       <TouchableOpacity
         onPress={handleLogin}
         disabled={!locationEnabled}
-        style={styles.touchableOpacitySignIn}>
-        <Text style={styles.SignIn}>Log in</Text>
+        style={[
+          styles.touchableOpacityContainer,
+          !locationEnabled && {backgroundColor: 'gray'},
+        ]}>
+        <Text style={styles.LoginText}>Log in</Text>
       </TouchableOpacity>
     </View>
   );
@@ -124,6 +133,18 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#f08518',
+  },
+  image: {
+    width: '75%',
+    height: 150,
+  },
+  icon: {
+    marginTop: 10,
   },
   inputView: {
     flexDirection: 'row',
@@ -140,18 +161,25 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     width: '80%',
   },
-  touchableOpacitySignIn: {
+  touchableOpacityContainer: {
     backgroundColor: 'green',
     width: '80%',
     height: 50,
     borderRadius: 25,
     marginTop: 15,
   },
-  SignIn: {
+  LoginText: {
     color: 'white',
     fontSize: 18,
     fontWeight: 'bold',
     textAlign: 'center',
     marginTop: 8,
+  },
+  fpassword: {
+    fontSize: 20,
+    color: 'red',
+    textAlign: 'right',
+    marginRight: 35,
+    marginVertical: 15,
   },
 });

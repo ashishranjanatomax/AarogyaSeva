@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef, createRef} from 'react';
+import React, {useState, useEffect, createRef} from 'react';
 import {
   ActivityIndicator,
   Image,
@@ -8,48 +8,113 @@ import {
   TextInput,
   ScrollView,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
+import {Picker} from '@react-native-picker/picker';
 import {Camera, useCameraDevices} from 'react-native-vision-camera';
 import ImagePicker from 'react-native-image-crop-picker';
-// import {useCameraDevices, Camera} from 'react-native-vision-camera';
-// import {RNCamera} from 'react-native-camera';
 import Header from '../component/Header';
+// import Vector Icons
 import Entypo from 'react-native-vector-icons/Entypo';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Octicons from 'react-native-vector-icons/Octicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import {Picker} from '@react-native-picker/picker';
 
+// Main Function
 const CreateJobList = ({navigation}) => {
+  // State varibale declararation
   const [nameTitle, setNameTitle] = useState('');
   const [firstName, setFirstName] = useState('');
   const [middleName, setMiddleName] = useState('');
   const [lastName, setLastName] = useState('');
-
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [address, setAddress] = useState('');
   const [landmark, setLandmark] = useState('');
   const [purpose, setPurpose] = useState('');
-  const [doc, setDoc] = useState('');
   const [selectedSector, setSelectedSector] = useState('');
   const [selectedSectorName, setSelectedSectorName] = useState('');
   const [showModal, setShowModal] = useState(false);
   const device = useCameraDevices();
-
   const [image, setImage] = useState(
-    'https://static.turbosquid.com/Preview/2019/02/18__04_59_25/Crash_Test_Dummy_Rigged_mb_00.jpg5B1ADE98-2892-494F-9EB2-F0B49A1BE375DefaultHQ.jpg',
+    'https://www.clipartkey.com/mpngs/m/82-824693_dummy-image-of-user.png',
   );
   bs = createRef();
+  // Handle submit function. it control all the functionality related to submit
+  const handleSubmit = () => {
+    try {
+      if (nameTitle.trim() === '') {
+        Alert.alert('Error', 'Please select the Salutation');
+        return;
+      }
+      if (firstName.trim() === '') {
+        Alert.alert('Error', 'Please enter the first Name');
+        return;
+      }
+      if (lastName.trim() === '') {
+        Alert.alert('Error', 'Please enter the last Name');
+        return;
+      }
+      if (phone.trim() === '') {
+        Alert.alert('Error', 'Please enter the phone number');
+        return;
+      }
+      if (email.trim() === '') {
+        Alert.alert('Error', 'Please enter the email');
+        return;
+      }
+      if (address.trim() === '') {
+        Alert.alert('Error', 'Please enter the permanent Address ');
+        return;
+      }
+      if (landmark.trim() === '') {
+        Alert.alert('Error', 'Please enter landmark location or name');
+        return;
+      }
+      if (purpose.trim() === '') {
+        Alert.alert('Error', 'Please select Purpose');
+        return;
+      }
+      if (selectedSector.trim() === '') {
+        Alert.alert('Error', 'Please select the sector');
+        return;
+      }
+      if (selectedSectorName.trim() === '') {
+        Alert.alert('Error', 'Please select the sector name');
+        return;
+      }
+      if (image.trim() === '') {
+        Alert.alert('Error', 'Please upload image');
+        return;
+      }
 
+      const formData = {
+        nameTitle,
+        firstName,
+        middleName,
+        lastName,
+        phone,
+        email,
+        address,
+        landmark,
+        purpose,
+        selectedSector,
+        selectedSectorName,
+        image,
+      };
+      console.log('Form Data:', JSON.stringify(formData, null, 2));
+    } catch (error) {
+      console.log(error);
+    }
+    navigation.navigate('OutCome');
+  };
   // Const choose photo from Camera
   const takePhotoFromCamera = () => {
     setShowModal(false);
     ImagePicker.openCamera({
       cropping: true,
-      compressImageQuality: 0.7,
     }).then(image => {
       console.log(image);
       setImage(image.path);
@@ -63,7 +128,6 @@ const CreateJobList = ({navigation}) => {
       width: 300,
       height: 300,
       cropping: true,
-      compressImageQuality: 0.7,
     }).then(image => {
       console.log(image);
       setImage(image.path);
@@ -74,6 +138,7 @@ const CreateJobList = ({navigation}) => {
     checkPermission();
   }, []);
 
+  // Check permission for Camera and Microphone
   const checkPermission = async () => {
     const newCameraPermission = await Camera.requestCameraPermission();
     const newMicroPhonePermission = await Camera.requestMicrophonePermission();
@@ -152,7 +217,6 @@ const CreateJobList = ({navigation}) => {
   ];
 
   const renderInner = () => {
-    console.log('Ashish');
     return (
       <View style={styles.panel}>
         <View style={{alignItems: 'center'}}>
@@ -184,29 +248,8 @@ const CreateJobList = ({navigation}) => {
       <Header navigation={navigation} />
       <ScrollView>
         <Text style={styles.heading}>Create Job List</Text>
-        <View
-          style={{
-            backgroundColor: '#dfe7ed',
-            height: 'auto',
-            flexDirection: 'column',
-            alignItems: 'center',
-            width: '90%',
-            alignSelf: 'center',
-            borderRadius: 15,
-          }}>
-          {/* Name */}
-          {/* <View style={styles.inputView}>
-            <Entypo name="user" size={24} color="gray" />
-            <TextInput
-              style={styles.input}
-              placeholder="Name as National ID"
-              value={name}
-              keyboardType="name-phone-pad"
-              returnKeyType="next"
-              onChangeText={text => setName(text)}
-            />
-          </View> */}
-          {/* // Inside the return statement of CreateJobList component */}
+        <View style={styles.textInput}>
+          {/* Name Title Picker */}
           <View style={styles.inputView}>
             <MaterialCommunityIcons
               name="human-male-female"
@@ -220,8 +263,10 @@ const CreateJobList = ({navigation}) => {
               <Picker.Item label="Select Title" value="" />
               <Picker.Item label="Mr" value="Mr" />
               <Picker.Item label="Mrs" value="Mrs" />
+              <Picker.Item label="Dr" value="Dr" />
             </Picker>
           </View>
+          {/* First, Middle and Last name TextInput */}
           <View style={styles.nameSection}>
             <View style={styles.inputView}>
               <TextInput
@@ -261,6 +306,7 @@ const CreateJobList = ({navigation}) => {
               style={styles.input}
               placeholder="Mobile Number"
               value={phone}
+              maxLength={10}
               keyboardType="number-pad"
               returnKeyType="next"
               onChangeText={text => setPhone(text)}
@@ -380,8 +426,18 @@ const CreateJobList = ({navigation}) => {
           ) : null}
 
           {/* Upload Image */}
-          <TouchableOpacity onPress={() => setShowModal(true)}>
-            <Text>Upload Image </Text>
+          <TouchableOpacity
+            style={{backgroundColor: '#f08518', padding: 15, borderRadius: 10}}
+            onPress={() => setShowModal(true)}>
+            <Text
+              style={{
+                textAlign: 'center',
+                fontSize: 18,
+                fontWeight: '700',
+                color: '#2e509d',
+              }}>
+              Upload Image
+            </Text>
           </TouchableOpacity>
           <View style={styles.inputView}>
             <Image
@@ -391,57 +447,9 @@ const CreateJobList = ({navigation}) => {
             />
           </View>
 
-          {/* {takePhotoClicked && (
-            <RNCamera
-              style={{flex: 1, aspectRatio: 1}}
-              ref={camera}
-              type={RNCamera.Constants.Type.back}
-              autoFocus={RNCamera.Constants.AutoFocus.on}>
-              {({camera, status}) => {
-                if (status === 'READY') {
-                  return (
-                    <View
-                      style={{
-                        borderWidth: 2,
-                        width: 250,
-                        height: 250,
-                        flex: 1,
-                        backgroundColor: 'trasnparent',
-                        justifyContent: 'flex-end',
-                      }}>
-                      <TouchableOpacity
-                        style={styles.capture}
-                        onPress={async () => {
-                          const photo = await camera.takePictureAsync({
-                            quality: 'high',
-                          });
-                          setCapturedImage(photo);
-                          setTakePhotoClicked(false);
-                        }}
-                      />
-                    </View>
-                  );
-                } else {
-                  return <View />;
-                }
-              }}
-            </RNCamera>
-          )}
-
-          {capturedImage && (
-            <Image
-              source={{uri: capturedImage.uri}}
-              style={{
-                width: 200,
-                height: 200,
-                alignSelf: 'center',
-                marginTop: 20,
-              }}
-            />
-          )} */}
           {/* Button */}
           <TouchableOpacity
-            onPress={() => navigation.navigate('OutCome')}
+            onPress={handleSubmit}
             style={styles.touchableOpacitySignIn}>
             <Text style={styles.SignIn}>Submit</Text>
           </TouchableOpacity>
@@ -517,14 +525,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginVertical: 15,
   },
-  formContainer: {
-    backgroundColor: '#dfe7ed',
-    flexDirection: 'column',
-    alignItems: 'center',
-    width: '90%',
-    alignSelf: 'center',
-    borderRadius: 15,
-  },
+
   nameSection: {
     flexDirection: 'column',
     justifyContent: 'center',
@@ -538,12 +539,6 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: '#FFFFFF',
     paddingTop: 20,
-    // borderTopLeftRadius: 20,
-    // borderTopRightRadius: 20,
-    // shadowColor: '#000000',
-    // shadowOffset: {width: 0, height: 0},
-    // shadowRadius: 5,
-    // shadowOpacity: 0.4,
   },
   nameInput: {
     flexDirection: 'row',
@@ -581,5 +576,13 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: 'bold',
     color: 'white',
+  },
+  textInput: {
+    height: 'auto',
+    flexDirection: 'column',
+    alignItems: 'center',
+    width: '90%',
+    alignSelf: 'center',
+    borderRadius: 15,
   },
 });

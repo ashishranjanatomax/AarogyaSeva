@@ -5,13 +5,20 @@ import {
   TouchableOpacity,
   FlatList,
   SafeAreaView,
+  Linking,
 } from 'react-native';
 import React, {useState} from 'react';
 import Header from '../component/Header';
 import JobListData from '../../assests/JobList.json';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 const JobList = ({navigation}) => {
   const [joblist, setJobList] = useState(JobListData);
 
+  // const OpenDialer = phoneNumber => {
+  //   Linking.openURL(`tel:${phoneNumber}`).catch(error => {
+  //     console.log('Error While Opening Dialer', error);
+  //   });
+  // };
   const renderList = ({item}) => {
     return (
       <SafeAreaView style={{flex: 1}}>
@@ -20,10 +27,22 @@ const JobList = ({navigation}) => {
             <Text>Name :- </Text>
             {item.Customer_Name}
           </Text>
-          <Text style={styles.text}>
-            <Text>Mobile Number: - </Text>
-            {item.Customer_MobileNumber}
-          </Text>
+          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <Text style={styles.text}>
+              <Text>Mobile Number: - </Text>
+              {item.Customer_MobileNumber}
+            </Text>
+            <TouchableOpacity
+              onPress={() =>
+                Linking.openURL(`tel:${item.Customer_MobileNumber}`).catch(
+                  error => {
+                    console.log('Error While Opening Dialer', error);
+                  },
+                )
+              }>
+              <FontAwesome name="phone" size={24} color="#2e509d" />
+            </TouchableOpacity>
+          </View>
           <Text style={styles.text}>Address : - {item.Address}</Text>
           <Text style={styles.text}>Purpose : - {item.Purpose}</Text>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
