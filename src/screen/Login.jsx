@@ -16,11 +16,13 @@ import Feather from 'react-native-vector-icons/Feather';
 
 // Import Location
 import Geolocation from '@react-native-community/geolocation';
+// import axios
+import Axios from 'axios';
 
 // Main Function
 const Login = ({navigation}) => {
   // Varibale declaration
-  const [mobile, setMobile] = useState('');
+  const [username, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [locationEnabled, setLocationEnabled] = useState(false);
@@ -40,15 +42,15 @@ const Login = ({navigation}) => {
   }, []);
 
   // Handle Login Function
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!locationEnabled) {
       Alert.alert('Location Alert', 'Please enable location services.');
       return;
     }
 
     // Condition for Mobile filed
-    if (mobile.trim() === '') {
-      Alert.alert('Error', 'Please enter your mobile number');
+    if (username.trim() === '') {
+      Alert.alert('Error', 'Please enter your UserName number');
       return;
     }
     // Condition for Password testing
@@ -56,10 +58,30 @@ const Login = ({navigation}) => {
       Alert.alert('Error', 'Please enter your password');
       return;
     }
+    try {
+      const response = await Axios.post(
+        'https://crm.aarogyaseva.co.in/api/login',
+        {
+          username,
+          password,
+        },
+      );
+      console.log(response.data);
 
+      // Handle your response here
+      if (response.data.status === 200) {
+        const userData = response.data.data.employee;
+        navigation.navigate('DrawerNavigation', {userData}); // Success: Navigate to next screen
+      } else {
+        Alert.alert('Login Failed', response.data.message); // Handle login failure
+      }
+    } catch (error) {
+      Alert.alert('Error', 'An error occurred. Please try again.');
+      console.error(error);
+    }
     // Perform your login logic here
     // Redirect to the next screen
-    navigation.navigate('DrawerNavigation');
+    // navigation.navigate('DrawerNavigation');
   };
 
   return (
@@ -75,11 +97,11 @@ const Login = ({navigation}) => {
         <Feather style={styles.icon} name="phone" size={24} color="gray" />
         <TextInput
           style={styles.input}
-          placeholder="Mobile Number"
+          placeholder="User Name"
           keyboardType="number-pad"
-          value={mobile}
+          value={username}
           maxLength={10}
-          onChangeText={text => setMobile(text)}
+          onChangeText={text => setUserName(text)}
         />
       </View>
 
@@ -133,6 +155,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'white',
   },
   title: {
     fontSize: 24,

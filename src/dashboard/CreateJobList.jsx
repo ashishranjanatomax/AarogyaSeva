@@ -21,10 +21,16 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Octicons from 'react-native-vector-icons/Octicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+//import geolocation
+import Geolocation from '@react-native-community/geolocation';
 
 // Main Function
 const CreateJobList = ({navigation}) => {
   // State varibale declararation
+  const [showReferenceInput, setShowReferenceInput] = useState(false);
+  const [refernceText, setReferenceText] = useState('');
+  const [source, setSource] = useState('');
   const [nameTitle, setNameTitle] = useState('');
   const [firstName, setFirstName] = useState('');
   const [middleName, setMiddleName] = useState('');
@@ -41,9 +47,18 @@ const CreateJobList = ({navigation}) => {
   const [image, setImage] = useState(
     'https://www.clipartkey.com/mpngs/m/82-824693_dummy-image-of-user.png',
   );
+  const [geographicalLocation, setGeoGraphicalLocation] = useState('');
+  useEffect(() => {
+    Geolocation.getCurrentPosition(position => {
+      const data = position;
+      setGeoGraphicalLocation(
+        `${data.coords.latitude},${data.coords.longitude}`,
+      );
+    });
+  });
   bs = createRef();
   // Handle submit function. it control all the functionality related to submit
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     try {
       if (nameTitle.trim() === '') {
         Alert.alert('Error', 'Please select the Salutation');
@@ -91,24 +106,46 @@ const CreateJobList = ({navigation}) => {
       }
 
       const formData = {
-        nameTitle,
-        firstName,
-        middleName,
-        lastName,
-        phone,
-        email,
-        address,
-        landmark,
-        purpose,
-        selectedSector,
-        selectedSectorName,
-        image,
+        source: source,
+        title: nameTitle,
+        firstname: firstName,
+        middlename: middleName,
+        lastname: lastName,
+        mobile: phone,
+        email: email,
+        address: address,
+        landmark: landmark,
+        purpose: purpose,
+        // background: selectedSector,
+        background: selectedSectorName,
+        image: 'image',
+        discussion: '1',
+        followup: '1',
+        outcome: '1',
+        geographicallocation: geographicalLocation,
       };
-      console.log('Form Data:', JSON.stringify(formData, null, 2));
+      console.log(formData, 'line 127');
+      const response = await fetch(
+        'https://crm.aarogyaseva.co.in/api/joblist',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        },
+      );
+      const responseData = await response.json();
+      console.log(responseData, 'line 139');
+      if (responseData.status === 200) {
+        console.log('Data added Sucessfully:', responseData.message);
+        navigation.navigate('OutCome');
+      } else {
+        console.log('Error adding data:', responseData.message);
+      }
     } catch (error) {
-      console.log(error);
+      console.log('error:', error);
     }
-    navigation.navigate('OutCome');
   };
   // Const choose photo from Camera
   const takePhotoFromCamera = () => {
@@ -157,6 +194,7 @@ const CreateJobList = ({navigation}) => {
     'OUT REACH',
     'OTHER',
   ];
+  const sourceOfLeed = ['Website', 'TeleCall', 'Reference', 'Direct'];
   const PersonBackground = [
     {
       id: 1,
@@ -248,7 +286,41 @@ const CreateJobList = ({navigation}) => {
       <Header navigation={navigation} />
       <ScrollView>
         <Text style={styles.heading}>Create Job List</Text>
+
         <View style={styles.textInput}>
+          <View style={{flexDirection: 'column'}}>
+            <View style={styles.inputView}>
+              <MaterialIcons name="source" size={24} color="gray" />
+              <Picker
+                style={styles.input}
+                selectedValue={source}
+                onValueChange={itemValue => {
+                  setSource(itemValue);
+                  setShowReferenceInput(itemValue === 'Reference');
+                }}>
+                <Picker.Item label="Select Source" value="" />
+                {sourceOfLeed.map((purposeName, index) => (
+                  <Picker.Item
+                    key={index}
+                    label={purposeName}
+                    value={purposeName}
+                  />
+                ))}
+              </Picker>
+            </View>
+            {showReferenceInput && (
+              <View style={styles.inputView}>
+                <TextInput
+                  value={refernceText}
+                  style={styles.input}
+                  placeholder="Enter Refernce"
+                  onChangeText={text => {
+                    setReferenceText(text);
+                  }}
+                />
+              </View>
+            )}
+          </View>
           {/* Name Title Picker */}
           <View style={styles.inputView}>
             <MaterialCommunityIcons
@@ -324,6 +396,19 @@ const CreateJobList = ({navigation}) => {
               onChangeText={text => setEmail(text)}
             />
           </View>
+          {/* User Geographical Location */}
+          <View style={styles.inputView}>
+            <Entypo name="home" size={24} color="gray" />
+            <TextInput
+              editable={false}
+              style={styles.input}
+              placeholder="GeoGraphical Location"
+              value={geographicalLocation}
+              keyboardType="default"
+              returnKeyType="next"
+              onChangeText={text => setGeoGraphicalLocation(text)}
+            />
+          </View>
           {/* User Address */}
           <View style={styles.inputView}>
             <Entypo name="home" size={24} color="gray" />
@@ -348,7 +433,7 @@ const CreateJobList = ({navigation}) => {
               onChangeText={text => setLandmark(text)}
             />
           </View>
-          {/* Picker */}
+          {/* Porpouse Picker */}
           <View style={styles.inputView}>
             <Octicons name="workflow" size={24} color="gray" />
             <Picker
@@ -465,6 +550,7 @@ export default CreateJobList;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'white',
   },
   inputView: {
     flexDirection: 'row',

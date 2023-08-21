@@ -8,6 +8,7 @@ import NewPassword from '../screen/NewPassword';
 import DrawerNavigation from './DrawerNavigation';
 import Outcome from '../screen/Outcome';
 import Profile from '../dashboard/Profile';
+import JobList from '../dashboard/JobList';
 
 const Stack = createNativeStackNavigator();
 
@@ -47,6 +48,11 @@ const AuthNavigation = () => {
       <Stack.Screen
         name="Profile"
         component={Profile}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="Job List"
+        component={JobList}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

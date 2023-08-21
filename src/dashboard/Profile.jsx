@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   Modal,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 //import OTP Modal for Email and Password
 import OtpModal from '../component/OtpModal';
 import OTPModalMobileChange from '../component/OTPModalMobileChange';
@@ -18,22 +18,43 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-
+import Feather from 'react-native-vector-icons/Feather';
+//import Geolocation
+import Geolocation from '@react-native-community/geolocation';
 // Main Function
-const Profile = ({navigation}) => {
+const Profile = ({navigation, userData}) => {
   // State varibale declaration
-  const [userName, setUserName] = useState('');
-  const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
-  const [email, setEmail] = useState('');
-  const [address, setAddress] = useState('');
-  const [areaLoaction, setAreaLocation] = useState('');
+  console.log(userData.name, 'Line 27');
+  const [userName, setUserName] = useState('ashishranjanmonal');
+  const [name, setName] = useState('Ashish Ranjan');
+  const [phone, setPhone] = useState('6206416452');
+  const [email, setEmail] = useState('aviashishranjan@gmail.com');
+  const [address, setAddress] = useState('Bairiya,Patna');
+  const [businessLoaction, setBusinessLocation] = useState('Patna City');
   const [homeLocation, setHomeLocation] = useState('');
-  const [designation, setDesignation] = useState('');
-  const [status, setStatus] = useState('');
-  const [password, setPassword] = useState('');
+  const [designation, setDesignation] = useState('Sales Associative');
+  const [status, setStatus] = useState('Permanent');
+  const [accountStatus, setAccountStatus] = useState('Active');
+  const [password, setPassword] = useState('Test@123');
   const [showOtpModal, setShowOtpModal] = useState(false);
   const [showOtpModalPhone, setShowOtpModalPhone] = useState(false);
+  const [landmark, setLandmark] = useState('Near by durga Mandir');
+
+  useEffect(() => {
+    Geolocation.getCurrentPosition(position => {
+      const data = position;
+      setHomeLocation(`${data.coords.latitude}" " ${data.coords.longitude}`);
+    });
+    setUserName(userData.username);
+    setName(userData.name);
+    setEmail(userData.email);
+    setPhone(userData.mobile);
+    setAddress(userData.address);
+    setBusinessLocation(userData.areacovered);
+    setDesignation(userData.designation);
+    setLandmark(userData.landmark);
+    setPassword(userData.password);
+  }, [userData]);
 
   return (
     <View style={styles.container}>
@@ -71,6 +92,7 @@ const Profile = ({navigation}) => {
           <View style={styles.inputView}>
             <Entypo name="mail" size={24} color="gray" />
             <TextInput
+              editable={false}
               style={styles.input}
               placeholder="Email ID"
               value={email}
@@ -78,14 +100,15 @@ const Profile = ({navigation}) => {
               keyboardType="email-address"
               onChangeText={text => setEmail(text)}
             />
-            <TouchableOpacity onPress={() => setShowOtpModal(true)}>
+            {/* <TouchableOpacity onPress={() => setShowOtpModal(true)}>
               <FontAwesome name="edit" size={24} color="gray" />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
           {/* Phone */}
           <View style={styles.inputView}>
             <FontAwesome name="phone" size={24} color="gray" />
             <TextInput
+              editable={false}
               style={styles.input}
               placeholder="Mobile Number"
               value={phone}
@@ -94,11 +117,11 @@ const Profile = ({navigation}) => {
               returnKeyType="next"
               onChangeText={text => setPhone(text)}
             />
-            <TouchableOpacity onPress={() => setShowOtpModalPhone(true)}>
+            {/* <TouchableOpacity onPress={() => setShowOtpModalPhone(true)}>
               <FontAwesome name="edit" size={24} color="gray" />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
-          {/*Address */}
+          {/*Home Address */}
           <View style={styles.inputView}>
             <Entypo name="home" size={24} color="gray" />
             <TextInput
@@ -117,11 +140,11 @@ const Profile = ({navigation}) => {
             <TextInput
               editable={false}
               style={styles.input}
-              placeholder="Area Location"
-              value={areaLoaction}
+              placeholder="Business Location"
+              value={businessLoaction}
               keyboardType="default"
               returnKeyType="next"
-              onChangeText={text => setAreaLocation(text)}
+              onChangeText={text => setBusinessLocation(text)}
             />
           </View>
           {/* Home Location */}
@@ -135,6 +158,22 @@ const Profile = ({navigation}) => {
               keyboardType="default"
               returnKeyType="next"
               onChangeText={text => setHomeLocation(text)}
+            />
+            <TouchableOpacity>
+              <FontAwesome name="edit" size={24} color="gray" />
+            </TouchableOpacity>
+          </View>
+          {/* Employee LandMark */}
+          <View style={styles.inputView}>
+            <Entypo name="location-pin" size={24} color="gray" />
+            <TextInput
+              editable={false}
+              style={styles.input}
+              placeholder="Landmark"
+              value={landmark}
+              keyboardType="default"
+              returnKeyType="next"
+              onChangeText={text => setLandmark(text)}
             />
           </View>
           {/* Designation */}
@@ -163,6 +202,18 @@ const Profile = ({navigation}) => {
               onChangeText={text => setStatus(text)}
             />
           </View>
+          {/* Status of Account */}
+          <View style={styles.inputView}>
+            <Feather name="activity" size={24} color="gray" />
+            <TextInput
+              editable={false}
+              style={styles.input}
+              placeholder="Status Account"
+              value={userData.accountstatus === 1 ? 'Active' : 'Suspended'}
+              keyboardType="default"
+              returnKeyType="next"
+            />
+          </View>
           {/* Password */}
           <View style={styles.inputView}>
             <Entypo name="lock" size={24} color="gray" />
@@ -178,14 +229,14 @@ const Profile = ({navigation}) => {
           </View>
           {/* Button */}
           <TouchableOpacity
-            onPress={() => navigation.replace('DrawerNavigation')}
+            onPress={() => navigation.navigate('Job List')}
             style={styles.touchableOpacityUpdate}>
             <Text style={styles.update}>Update</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
       {/* Email id Change */}
-      <Modal visible={showOtpModal} animationType="slide" transparent={true}>
+      {/* <Modal visible={showOtpModal} animationType="slide" transparent={true}>
         <View style={styles.modalContainer}>
           <OtpModal
             navigation={navigation}
@@ -195,9 +246,9 @@ const Profile = ({navigation}) => {
             }}
           />
         </View>
-      </Modal>
+      </Modal> */}
       {/* Mobile number change */}
-      <Modal
+      {/* <Modal
         visible={showOtpModalPhone}
         animationType="slide"
         transparent={true}>
@@ -210,7 +261,7 @@ const Profile = ({navigation}) => {
             }}
           />
         </View>
-      </Modal>
+      </Modal> */}
     </View>
   );
 };
@@ -220,6 +271,7 @@ export default Profile;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'white',
   },
   title: {
     color: '#2e509d',
@@ -229,7 +281,7 @@ const styles = StyleSheet.create({
     marginVertical: 15,
   },
   textInputContainer: {
-    backgroundColor: '#dfe7ed',
+    backgroundColor: 'white',
     height: 'auto',
     flexDirection: 'column',
     alignItems: 'center',
@@ -255,6 +307,8 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginLeft: 10,
     width: '80%',
+    fontWeight: 'bold',
+    color: 'black',
   },
   touchableOpacityUpdate: {
     backgroundColor: 'green',

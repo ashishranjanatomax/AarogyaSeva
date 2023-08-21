@@ -13,9 +13,7 @@ const ForgetPassword = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      <Text style={{fontSize: 24, fontWeight: 'bold', color: 'red'}}>
-        Forget Password
-      </Text>
+      <Text style={styles.title}>Forget Password</Text>
 
       <View style={styles.inputView}>
         <Feather style={{marginTop: 10}} name="phone" size={24} color="gray" />
@@ -30,8 +28,8 @@ const ForgetPassword = ({navigation}) => {
       </View>
       <TouchableOpacity
         onPress={() => navigation.navigate('ForgetPasswordOTP')}
-        style={styles.touchableOpacitySignIn}>
-        <Text style={styles.SignIn}>Send OTP</Text>
+        style={styles.touchableOpacityButton}>
+        <Text style={styles.ButtonText}>Send OTP</Text>
       </TouchableOpacity>
     </View>
   );
@@ -44,6 +42,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: 'red',
   },
   inputView: {
     flexDirection: 'row',
@@ -60,7 +63,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     width: '80%',
   },
-  touchableOpacitySignIn: {
+  touchableOpacityButton: {
     flex: 0.1,
     justifyContent: 'center',
     alignItems: 'center',
@@ -70,7 +73,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     marginTop: 15,
   },
-  SignIn: {
+  ButtonText: {
     color: 'white',
     fontSize: 18,
     fontWeight: 'bold',

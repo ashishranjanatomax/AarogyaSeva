@@ -7,30 +7,38 @@ import {
   SafeAreaView,
   Linking,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import Header from '../component/Header';
 import JobListData from '../../assests/JobList.json';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 const JobList = ({navigation}) => {
-  const [joblist, setJobList] = useState(JobListData);
+  const [joblist, setJobList] = useState([]);
 
-  // const OpenDialer = phoneNumber => {
-  //   Linking.openURL(`tel:${phoneNumber}`).catch(error => {
-  //     console.log('Error While Opening Dialer', error);
-  //   });
-  // };
+  useEffect(() => {
+    // Fetch Data from the API
+    fetch('https://crm.aarogyaseva.co.in/api/joblist')
+      .then(response => response.json())
+      .then(data => {
+        if (data.status === 200) {
+          setJobList(data.data);
+        }
+      })
+      .catch(error => {
+        console.log('Error Fetching Data:', error);
+      });
+  }, [joblist]);
   const renderList = ({item}) => {
     return (
       <SafeAreaView style={{flex: 1}}>
         <View style={styles.mainView}>
           <Text style={styles.text}>
             <Text>Name :- </Text>
-            {item.Customer_Name}
+            {`${item.title} ${item.firstname} ${item.middlename} ${item.lastname}`}
           </Text>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <Text style={styles.text}>
               <Text>Mobile Number: - </Text>
-              {item.Customer_MobileNumber}
+              {item.mobile}
             </Text>
             <TouchableOpacity
               onPress={() =>
@@ -43,12 +51,12 @@ const JobList = ({navigation}) => {
               <FontAwesome name="phone" size={24} color="#2e509d" />
             </TouchableOpacity>
           </View>
-          <Text style={styles.text}>Address : - {item.Address}</Text>
-          <Text style={styles.text}>Purpose : - {item.Purpose}</Text>
+          <Text style={styles.text}>Address : - {item.address}</Text>
+          <Text style={styles.text}>Purpose : - {item.purpose}</Text>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <Text style={styles.text}>
               <Text>Required Action: - </Text>
-              {item.RequiredAction}
+              {item.requiredAction}
             </Text>
             <TouchableOpacity
               onPress={() => navigation.navigate('OutCome')}
@@ -88,7 +96,7 @@ const JobList = ({navigation}) => {
       <FlatList
         data={joblist}
         renderItem={renderList}
-        keyExtractor={item => item.Customer_ID}
+        keyExtractor={item => item.id.toString()}
       />
     </View>
   );
@@ -99,6 +107,7 @@ export default JobList;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'white',
   },
   mainView: {
     flex: 1,
