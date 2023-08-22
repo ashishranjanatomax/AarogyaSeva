@@ -11,13 +11,13 @@ import CreateJobList from '../dashboard/CreateJobList';
 import Profile from '../dashboard/Profile';
 import LeadFollowUp from '../dashboard/LeadFollowUp';
 import LeadClosed from '../dashboard/LeadClosed';
-import Outcome from '../screen/Outcome';
 import EmployeePerformance from '../dashboard/EmployeePerformance';
 
 const Drawer = createDrawerNavigator();
 
 const CustomDrawerContent = ({userData, ...props}) => {
-  const {name, email} = userData;
+  const {name, email, id} = userData;
+  console.log('Line 20', userData);
   // const [userName, setUserName] = useState('ashishranjanmonal');
   // const [email, setEmail] = useState('aviashishranjan@gmail.com');
   const [profileImage, setProfileImage] = useState(
@@ -52,18 +52,16 @@ const DrawerNavigation = ({route}) => {
   return (
     <Drawer.Navigator
       backBehavior="initialRoute"
-      initialRouteName="Job List"
+      initialRouteName="JobList"
       drawerContent={props => (
         <CustomDrawerContent {...props} userData={userData} />
       )}>
       <Drawer.Screen name="Profile" options={{headerShown: false}}>
         {props => <Profile {...props} userData={userData} />}
       </Drawer.Screen>
-      <Drawer.Screen
-        name="Job List"
-        component={JobList}
-        options={{headerShown: false}}
-      />
+      <Drawer.Screen name="JobList" options={{headerShown: false}}>
+        {props => <JobList {...props} userData={userData} />}
+      </Drawer.Screen>
       <Drawer.Screen
         name="Create Lead"
         component={CreateJobList}
@@ -79,11 +77,11 @@ const DrawerNavigation = ({route}) => {
         component={LeadClosed}
         options={{headerShown: false}}
       />
-      <Drawer.Screen
+      {/* <Drawer.Screen
         name="OutCome"
         component={Outcome}
         options={{headerShown: false}}
-      />
+      /> */}
       <Drawer.Screen
         name="Performance"
         component={EmployeePerformance}

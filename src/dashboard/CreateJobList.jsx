@@ -24,6 +24,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 //import geolocation
 import Geolocation from '@react-native-community/geolocation';
+import DatePicker from 'react-native-date-picker';
 
 // Main Function
 const CreateJobList = ({navigation}) => {
@@ -48,6 +49,21 @@ const CreateJobList = ({navigation}) => {
     'https://www.clipartkey.com/mpngs/m/82-824693_dummy-image-of-user.png',
   );
   const [geographicalLocation, setGeoGraphicalLocation] = useState('');
+  const [outcome, setOutcome] = useState('');
+  const [followUp, setFollowUp] = useState('');
+  const [date, setDate] = useState(new Date());
+  const [open, setOpen] = useState(false);
+  const [descriptionDetails, setDescriptionDetails] = useState('');
+  const [amount, setAmount] = useState('');
+  const outComeName = [
+    'Positve',
+    'Negative',
+    'Neutral',
+    'Positve Closed',
+    'Negative Closed',
+  ];
+  const followUpName = ['Call', 'Mail', 'Visit'];
+
   useEffect(() => {
     Geolocation.getCurrentPosition(position => {
       const data = position;
@@ -104,6 +120,10 @@ const CreateJobList = ({navigation}) => {
         Alert.alert('Error', 'Please upload image');
         return;
       }
+      if (image.trim() === '') {
+        Alert.alert('Error', 'Please upload image');
+        return;
+      }
 
       const formData = {
         source: source,
@@ -116,13 +136,17 @@ const CreateJobList = ({navigation}) => {
         address: address,
         landmark: landmark,
         purpose: purpose,
-        // background: selectedSector,
+        backgroundsector: selectedSector,
         background: selectedSectorName,
         image: 'image',
-        discussion: '1',
-        followup: '1',
-        outcome: '1',
+        discussion: descriptionDetails,
+        followup: followUp,
+        outcome: outcome,
         geographicallocation: geographicalLocation,
+        purposeamount: amount,
+        dateforfollowup: date.toDateString(),
+        timeforfollowup: date.toTimeString(),
+        employeeid: '1',
       };
       console.log(formData, 'line 127');
       const response = await fetch(
@@ -139,7 +163,7 @@ const CreateJobList = ({navigation}) => {
       console.log(responseData, 'line 139');
       if (responseData.status === 200) {
         console.log('Data added Sucessfully:', responseData.message);
-        navigation.navigate('OutCome');
+        navigation.navigate('JobList');
       } else {
         console.log('Error adding data:', responseData.message);
       }
@@ -530,6 +554,89 @@ const CreateJobList = ({navigation}) => {
               style={{height: 100, width: 100}}
               imageStyle={{borderRadius: 15}}
             />
+          </View>
+
+          <Text style={styles.heading}>Out Come for Follow Up</Text>
+          <View>
+            <View style={styles.inputView}>
+              <Octicons name="workflow" size={24} color="gray" />
+              <Picker
+                style={styles.input}
+                selectedValue={outcome}
+                onValueChange={itemValue => setOutcome(itemValue)}>
+                <Picker.Item label="Select OutCome" value="" />
+                {outComeName.map((outComeName, index) => (
+                  <Picker.Item
+                    key={index}
+                    label={outComeName}
+                    value={outComeName}
+                  />
+                ))}
+              </Picker>
+            </View>
+            {/* Description or notes */}
+            <View style={styles.inputView}>
+              <TextInput
+                value={descriptionDetails}
+                style={styles.input}
+                multiline={true}
+                placeholder="Enter Notes"
+                onChangeText={text => setDescriptionDetails(text)}
+              />
+            </View>
+            {/* Follow up for Picker */}
+            <View style={styles.inputView}>
+              <Octicons name="workflow" size={24} color="gray" />
+              <Picker
+                style={styles.input}
+                selectedValue={followUp}
+                onValueChange={itemValue => setFollowUp(itemValue)}>
+                <Picker.Item label="Select Follow Up Method" value="" />
+                {followUpName.map((outComeName, index) => (
+                  <Picker.Item
+                    key={index}
+                    label={outComeName}
+                    value={outComeName}
+                  />
+                ))}
+              </Picker>
+            </View>
+            {/* Date Picker */}
+            <TouchableOpacity
+              onPress={() => setOpen(true)}
+              style={styles.inputView}>
+              <AntDesign name="calendar" size={24} color="gray" />
+              <TextInput
+                editable={false}
+                value={date.toDateString()}
+                style={styles.input}
+                placeholder={`Please choose the Date `}
+              />
+            </TouchableOpacity>
+            {/* Time Picker */}
+            <TouchableOpacity
+              style={styles.inputView}
+              // onPress={() => setTimeOpen(true)}
+            >
+              <Entypo name="back-in-time" size={24} color="gray" />
+              <TextInput
+                editable={false}
+                value={date.toTimeString()}
+                style={styles.input}
+                placeholder="choose time for fallow up"
+              />
+            </TouchableOpacity>
+            {/* Pupose Amount */}
+            <View style={styles.inputView}>
+              <FontAwesome name="rupee" size={24} color="gray" />
+              <TextInput
+                style={styles.input}
+                value={amount}
+                placeholder="Purpose Amount"
+                keyboardType="number-pad"
+                onChangeText={text => setAmount(text)}
+              />
+            </View>
           </View>
 
           {/* Button */}

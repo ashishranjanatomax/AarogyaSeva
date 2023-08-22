@@ -9,24 +9,28 @@ import {
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import Header from '../component/Header';
-import JobListData from '../../assests/JobList.json';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-const JobList = ({navigation}) => {
+const JobList = ({navigation, userData}) => {
+  console.log('Line 14', userData.id);
   const [joblist, setJobList] = useState([]);
 
   useEffect(() => {
     // Fetch Data from the API
-    fetch('https://crm.aarogyaseva.co.in/api/joblist')
+    fetch(
+      `https://crm.aarogyaseva.co.in/api/followuplistbyemployeeid/${userData.id}`,
+    )
       .then(response => response.json())
       .then(data => {
         if (data.status === 200) {
-          setJobList(data.data);
+          setJobList(data.joblist_and_followup_data);
+          console.log(data.joblist_and_followup_data);
         }
       })
       .catch(error => {
         console.log('Error Fetching Data:', error);
       });
-  }, [joblist]);
+  }, [userData.id]);
+
   const renderList = ({item}) => {
     return (
       <SafeAreaView style={{flex: 1}}>
@@ -42,11 +46,9 @@ const JobList = ({navigation}) => {
             </Text>
             <TouchableOpacity
               onPress={() =>
-                Linking.openURL(`tel:${item.Customer_MobileNumber}`).catch(
-                  error => {
-                    console.log('Error While Opening Dialer', error);
-                  },
-                )
+                Linking.openURL(`tel:${item.mobile}`).catch(error => {
+                  console.log('Error While Opening Dialer', error);
+                })
               }>
               <FontAwesome name="phone" size={24} color="#2e509d" />
             </TouchableOpacity>
@@ -59,7 +61,13 @@ const JobList = ({navigation}) => {
               {item.requiredAction}
             </Text>
             <TouchableOpacity
-              onPress={() => navigation.navigate('OutCome')}
+              onPress={() =>
+                navigation.navigate('DetailsScreen', {
+                  jobData: item,
+                  userId: userData.id,
+                  followups: item.followups,
+                })
+              }
               style={{
                 backgroundColor: '#f08518',
                 borderRadius: 15,

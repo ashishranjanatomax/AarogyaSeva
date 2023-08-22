@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Text,
   View,
+  Image,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import Header from '../component/Header';
@@ -13,17 +14,27 @@ import Octicons from 'react-native-vector-icons/Octicons';
 import Entypo from 'react-native-vector-icons/Entypo';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import HeaderInside from '../component/HeaderInside';
-import axios from 'axios';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import DatePicker from 'react-native-date-picker';
-const Outcome = ({navigation}) => {
+import Geolocation from '@react-native-community/geolocation';
+const Outcome = ({navigation, route}) => {
   const [outcome, setOutcome] = useState('');
   const [followUp, setFollowUp] = useState('');
+  const [note, setNotes] = useState('');
   const [positiveClosed, setPositiveClosed] = useState(false);
   const [negativeClosed, setNegativeClosed] = useState(false);
   const [date, setDate] = useState(new Date());
   const [open, setOpen] = useState(false);
-
+  const [latitude, setLatitude] = useState('');
+  const [longitude, setLongitude] = useState('');
+  const [amount, setAmount] = useState('');
+  Geolocation.getCurrentPosition(position => {
+    const data = position;
+    setLatitude(`${data.coords.latitude}`);
+    setLongitude(`${data.coords.longitude}`);
+  });
+  const {joblistId, userId} = route.params;
+  // console.log('Line 39', userId);
   const outComeName = [
     'Positve',
     'Negative',
@@ -33,10 +44,54 @@ const Outcome = ({navigation}) => {
   ];
   const followUpName = ['Call', 'Mail', 'Visit'];
 
+  const handleSubmit = async () => {
+    const postData = {
+      employeeId: userId.toString(),
+      joblistId: joblistId.toString(),
+      outcome: outcome,
+      notes: note,
+      followupmethods: followUp,
+      visitdate: date.toISOString().split('T')[0],
+      visittime: date.toLocaleTimeString('en-US', {hour12: false}),
+      latitude: latitude,
+      longitude: longitude,
+      purposeamount: amount,
+    };
+    console.log(postData, 'Line 58');
+
+    const response = await fetch('https://crm.aarogyaseva.co.in/api/followup', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(postData),
+    });
+    const responseData = await response.json();
+    console.log(responseData, 'Line 72');
+    if (responseData.status === 200) {
+      console.log('Data Added Sucessfully:', responseData.message);
+      navigation.goBack();
+    } else {
+      console.log('Error adding data line 76', responseData.message);
+    }
+  };
+
   return (
-    <View style={styles.container}>
-      <Header navigation={navigation} />
-      <Text style={styles.title}>Out Come for FollowUp</Text>
+    <View style={{flex: 1}}>
+      {/* <Header navigation={navigation} /> */}
+      <View style={styles.container2}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Ionicons name="arrow-back" size={50} color="#00bc4c" />
+        </TouchableOpacity>
+        <Image
+          source={require('../../assests/aarogyasevalogo.png')}
+          resizeMode="contain"
+          style={{width: '50%', height: 100}}
+        />
+        <Entypo name="log-out" size={50} color="#f08518" />
+      </View>
+      <Text style={styles.title}>Out Come for Follow Up</Text>
+
       <ScrollView>
         <View style={styles.objectHolder}>
           {/* Select Outcome Like Positive, Negative,Neutral,Closed */}
@@ -59,6 +114,8 @@ const Outcome = ({navigation}) => {
           {/* Description or notes */}
           <View style={styles.inputView}>
             <TextInput
+              value={note}
+              onChangeText={text => setNotes(text)}
               style={styles.input}
               multiline={true}
               placeholder="Enter Notes"
@@ -110,18 +167,19 @@ const Outcome = ({navigation}) => {
             />
           </TouchableOpacity>
           {/* Pupose Amount */}
-
           <View style={styles.inputView}>
             <FontAwesome name="rupee" size={24} color="gray" />
             <TextInput
               style={styles.input}
+              value={amount}
+              onChangeText={text => setAmount(text)}
               placeholder="Purpose Amount"
               keyboardType="number-pad"
             />
           </View>
-          <Text>{Date.date}</Text>
+
           <TouchableOpacity
-            onPress={() => navigation.navigate('Job List')}
+            onPress={handleSubmit}
             style={styles.TouchableOpacityStyle}>
             <Text style={styles.buttonText}>Submit</Text>
           </TouchableOpacity>
@@ -196,5 +254,14 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 22,
     fontWeight: 'bold',
+  },
+  container2: {
+    height: 'auto',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignContent: 'center',
+    alignItems: 'center',
+    borderBottomWidth: 2,
+    borderBottomColor: '#2e509d',
   },
 });

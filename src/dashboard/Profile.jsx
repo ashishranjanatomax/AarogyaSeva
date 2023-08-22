@@ -40,10 +40,17 @@ const Profile = ({navigation, userData}) => {
   const [showOtpModalPhone, setShowOtpModalPhone] = useState(false);
   const [landmark, setLandmark] = useState('Near by durga Mandir');
 
+  const location = () => {
+    Geolocation.getCurrentPosition(position => {
+      const data = position;
+      setHomeLocation(`${data.coords.latitude},${data.coords.longitude}`);
+    });
+  };
+
   useEffect(() => {
     Geolocation.getCurrentPosition(position => {
       const data = position;
-      setHomeLocation(`${data.coords.latitude}" " ${data.coords.longitude}`);
+      setHomeLocation(`${data.coords.latitude}, ${data.coords.longitude}`);
     });
     setUserName(userData.username);
     setName(userData.name);
@@ -159,7 +166,7 @@ const Profile = ({navigation, userData}) => {
               returnKeyType="next"
               onChangeText={text => setHomeLocation(text)}
             />
-            <TouchableOpacity>
+            <TouchableOpacity onPress={location}>
               <FontAwesome name="edit" size={24} color="gray" />
             </TouchableOpacity>
           </View>
