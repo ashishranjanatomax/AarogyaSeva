@@ -72,7 +72,7 @@ const JobList = ({navigation, userData}) => {
             </TouchableOpacity>
           </View>
           <Text style={styles.text}>Address : - {item.address}</Text>
-          <Text style={styles.text}>Purpose : - {item.purpose}</Text>
+          <Text style={styles.text}>Purpose : - {item.prospect}</Text>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <Text style={styles.text}>
               <Text>Required Action: - </Text>

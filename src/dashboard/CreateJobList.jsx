@@ -27,8 +27,9 @@ import Geolocation from '@react-native-community/geolocation';
 import DatePicker from 'react-native-date-picker';
 
 // Main Function
-const CreateJobList = ({navigation}) => {
+const CreateJobList = ({navigation, userData}) => {
   // State varibale declararation
+  // console.log(userData.name, 'Line 32');
   const [showReferenceInput, setShowReferenceInput] = useState(false);
   const [refernceText, setReferenceText] = useState('');
   const [source, setSource] = useState('');
@@ -55,6 +56,10 @@ const CreateJobList = ({navigation}) => {
   const [open, setOpen] = useState(false);
   const [descriptionDetails, setDescriptionDetails] = useState('');
   const [amount, setAmount] = useState('');
+  const [createdby, setCreatedBy] = useState(userData.id);
+  const [district, setDistrict] = useState('');
+  const [assignedto, setAssignedto] = useState('-');
+  console.log(createdby, 'Line 62');
   const outComeName = [
     'Positve',
     'Negative',
@@ -124,6 +129,10 @@ const CreateJobList = ({navigation}) => {
         Alert.alert('Error', 'Please upload image');
         return;
       }
+      if (district.trim() === '') {
+        Alert.alert('Error', 'Please enter District Name');
+        return;
+      }
 
       const formData = {
         source: source,
@@ -135,18 +144,22 @@ const CreateJobList = ({navigation}) => {
         email: email,
         address: address,
         landmark: landmark,
-        purpose: purpose,
+        prospect: purpose,
         backgroundsector: selectedSector,
         background: selectedSectorName,
         image: 'image',
         discussion: descriptionDetails,
+        note: descriptionDetails,
         followup: followUp,
         outcome: outcome,
         geographicallocation: geographicalLocation,
         purposeamount: amount,
         dateforfollowup: date.toDateString(),
         timeforfollowup: date.toTimeString(),
-        employeeid: '1',
+        // employeeid: '1',
+        createdby: createdby.toString(),
+        district,
+        assignedto,
       };
       console.log(formData, 'line 127');
       const response = await fetch(
@@ -345,6 +358,15 @@ const CreateJobList = ({navigation}) => {
               </View>
             )}
           </View>
+          {/* Created By */}
+          <View style={styles.inputView}>
+            <TextInput
+              editable={false}
+              value={createdby}
+              style={styles.input}
+              placeholder={`${userData.name}`}
+            />
+          </View>
           {/* Name Title Picker */}
           <View style={styles.inputView}>
             <MaterialCommunityIcons
@@ -443,6 +465,18 @@ const CreateJobList = ({navigation}) => {
               keyboardType="default"
               returnKeyType="next"
               onChangeText={text => setAddress(text)}
+            />
+          </View>
+          {/* User District */}
+          <View style={styles.inputView}>
+            <Entypo name="home" size={24} color="gray" />
+            <TextInput
+              style={styles.input}
+              placeholder="District"
+              value={district}
+              keyboardType="default"
+              returnKeyType="next"
+              onChangeText={text => setDistrict(text)}
             />
           </View>
           {/* Landmark */}

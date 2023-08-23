@@ -59,11 +59,9 @@ const DrawerNavigation = ({route}) => {
       <Drawer.Screen name="JobList" options={{headerShown: false}}>
         {props => <JobList {...props} userData={userData} />}
       </Drawer.Screen>
-      <Drawer.Screen
-        name="Create Lead"
-        component={CreateJobList}
-        options={{headerShown: false}}
-      />
+      <Drawer.Screen name="Create Lead" options={{headerShown: false}}>
+        {props => <CreateJobList {...props} userData={userData} />}
+      </Drawer.Screen>
       <Drawer.Screen
         name="Lead Follow Up"
         component={LeadFollowUp}

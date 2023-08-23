@@ -78,15 +78,31 @@ const DetailsScreen = ({navigation, route}) => {
             gap: 15,
           }}>
           <Image source={require('../../assests/user-image.png')} />
-          <Text style={styles.text}>
-            Name: - {jobData.title} {jobData.firstname} {jobData.middlename}{' '}
-            {jobData.lastname}
-          </Text>
-          <Text style={styles.text}>Address: - {jobData.address}</Text>
-          <Text style={styles.text}>Background: - {jobData.background}</Text>
-          <Text style={styles.text}>
-            Background Sector Name: - {jobData.backgroundsector}
-          </Text>
+          <View style={{flexDirection: 'row', gap: 10}}>
+            <View style={styles.design}>
+              <Text style={styles.text}>Name</Text>
+              <Text style={styles.text}>
+                {jobData.title} {jobData.firstname} {jobData.middlename}{' '}
+                {jobData.lastname}
+              </Text>
+            </View>
+            <View style={styles.design}>
+              <Text style={styles.text}>Address</Text>
+              <Text style={styles.text}>{jobData.address}</Text>
+            </View>
+          </View>
+
+          <View style={{flexDirection: 'row', gap: 10}}>
+            <View style={styles.design}>
+              <Text style={styles.text}>Background</Text>
+              <Text style={styles.text}>{jobData.background}</Text>
+            </View>
+            <View style={styles.design}>
+              <Text style={styles.text}>Background Sector Name</Text>
+              <Text style={styles.text}>{jobData.backgroundsector}</Text>
+            </View>
+          </View>
+
           <Text style={styles.text}>Email: - {jobData.email}</Text>
           <Text style={styles.text}>Mobile Number: - {jobData.mobile}</Text>
           <Text style={styles.text}>Discussion: - {jobData.discussion}</Text>
@@ -193,5 +209,18 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 5,
+  },
+  design: {
+    borderWidth: 2,
+    padding: 25,
+    borderRadius: 10,
+    borderColor: '#2e509d',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    shadowColor: 'black',
+    elevation: 15,
+    backgroundColor: 'white',
+    gap: 10,
+    alignItems: 'center',
   },
 });
