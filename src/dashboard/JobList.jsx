@@ -6,16 +6,22 @@ import {
   FlatList,
   SafeAreaView,
   Linking,
+  RefreshControl,
+  Image,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import Header from '../component/Header';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-const JobList = ({navigation, userData}) => {
-  console.log('Line 14', userData.id);
-  const [joblist, setJobList] = useState([]);
 
-  useEffect(() => {
-    // Fetch Data from the API
+const JobList = ({navigation, userData}) => {
+  // console.log('Line 14', userData.id);
+  const [joblist, setJobList] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  console.log(userData, 'Line 16');
+
+  const fetchData = () => {
+    setIsLoading(true);
     fetch(
       `https://crm.aarogyaseva.co.in/api/followuplistbyemployeeid/${userData.id}`,
     )
@@ -23,13 +29,25 @@ const JobList = ({navigation, userData}) => {
       .then(data => {
         if (data.status === 200) {
           setJobList(data.joblist_and_followup_data);
-          console.log(data.joblist_and_followup_data);
         }
       })
       .catch(error => {
         console.log('Error Fetching Data:', error);
+      })
+      .finally(() => {
+        setRefreshing(false);
+        setIsLoading(false);
       });
-  }, [userData.id]);
+  };
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    fetchData();
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [userData]);
 
   const renderList = ({item}) => {
     return (
@@ -58,7 +76,7 @@ const JobList = ({navigation, userData}) => {
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <Text style={styles.text}>
               <Text>Required Action: - </Text>
-              {item.requiredAction}
+              {item.followup}
             </Text>
             <TouchableOpacity
               onPress={() =>
@@ -100,12 +118,28 @@ const JobList = ({navigation, userData}) => {
         }}>
         Job List
       </Text>
-
-      <FlatList
-        data={joblist}
-        renderItem={renderList}
-        keyExtractor={item => item.id.toString()}
-      />
+      {isLoading ? (
+        // <ActivityIndicator size="large" color="#2e509d" />
+        <Image
+          source={require('../../assests/aarogyasevalogo.png')}
+          resizeMode="contain"
+          style={{
+            marginVertical: 200,
+            width: 250,
+            height: 250,
+            alignSelf: 'center',
+          }}
+        />
+      ) : (
+        <FlatList
+          data={joblist}
+          renderItem={renderList}
+          keyExtractor={item => item.id.toString()}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+        />
+      )}
     </View>
   );
 };

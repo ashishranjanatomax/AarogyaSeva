@@ -6,19 +6,44 @@ import {
   Text,
   TouchableOpacity,
   View,
+  RefreshControl,
 } from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Entypo from 'react-native-vector-icons/Entypo';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const DetailsScreen = ({navigation, route}) => {
   const {jobData, userId, followups} = route.params;
+  const [refreshing, setRefreshing] = useState(false);
 
+  const handleLogout = async () => {
+    try {
+      await AsyncStorage.removeItem('userData');
+      navigation.replace('Login');
+    } catch (error) {
+      console.log('Error Logging out:', error);
+    }
+  };
   console.log('Line 15', followups);
+
+  const onRefresh = () => {
+    setRefreshing(true);
+
+    setTimeout(() => {
+      // Simulating a delay for demonstration purposes
+      setRefreshing(false);
+    }, 2000);
+  };
 
   const renderFollowupItem = ({item}) => (
     <View style={styles.followupItem}>
-      <Text style={styles.followupText}>Outcome: {item.outcome}</Text>
-      <Text style={styles.followupText}>Notes: {item.notes}</Text>
+      <Text style={styles.followupText}>Date: {item.visitdate}</Text>
+      <Text style={styles.followupText}>
+        Follow Up Methood: {item.followupmethods}
+      </Text>
+      <Text style={styles.followupText}>Discussion Notes: {item.notes}</Text>
+      <Text style={styles.followupText}>Status: {item.outcome}</Text>
+
       {/* Render other followup data here */}
     </View>
   );
@@ -33,10 +58,15 @@ const DetailsScreen = ({navigation, route}) => {
           resizeMode="contain"
           style={{width: '50%', height: 100}}
         />
-        <Entypo name="log-out" size={50} color="#f08518" />
+        <TouchableOpacity onPress={handleLogout}>
+          <Entypo name="log-out" size={50} color="#f08518" />
+        </TouchableOpacity>
       </View>
       <Text style={styles.heading}>Candidate Details</Text>
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }>
         <View
           style={{
             flexDirection: 'column',

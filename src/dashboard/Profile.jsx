@@ -6,6 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
   Modal,
+  Alert,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 //import OTP Modal for Email and Password
@@ -23,23 +24,24 @@ import Feather from 'react-native-vector-icons/Feather';
 import Geolocation from '@react-native-community/geolocation';
 // Main Function
 const Profile = ({navigation, userData}) => {
-  // State varibale declaration
-  console.log(userData.name, 'Line 27');
-  const [userName, setUserName] = useState('ashishranjanmonal');
-  const [name, setName] = useState('Ashish Ranjan');
-  const [phone, setPhone] = useState('6206416452');
-  const [email, setEmail] = useState('aviashishranjan@gmail.com');
-  const [address, setAddress] = useState('Bairiya,Patna');
-  const [businessLoaction, setBusinessLocation] = useState('Patna City');
-  const [homeLocation, setHomeLocation] = useState('');
-  const [designation, setDesignation] = useState('Sales Associative');
-  const [status, setStatus] = useState('Permanent');
-  const [accountStatus, setAccountStatus] = useState('Active');
-  const [password, setPassword] = useState('Test@123');
+  const [userId, setUserId] = useState(userData.id);
+  const [userName, setUserName] = useState(userData.username);
+  const [name, setName] = useState(userData.name);
+  const [phone, setPhone] = useState(userData.mobile);
+  const [email, setEmail] = useState(userData.email);
+  const [address, setAddress] = useState(userData.address);
+  const [businessLoaction, setBusinessLocation] = useState(
+    userData.areacovered,
+  );
+  const [homeLocation, setHomeLocation] = useState(userData.latitudelongitude);
+  const [designation, setDesignation] = useState(userData.designation);
+  const [status, setStatus] = useState(userData.employmenttype);
+  const [accountStatus, setAccountStatus] = useState(userData.accountstatus);
+  const [password, setPassword] = useState(userData.password);
   const [showOtpModal, setShowOtpModal] = useState(false);
   const [showOtpModalPhone, setShowOtpModalPhone] = useState(false);
-  const [landmark, setLandmark] = useState('Near by durga Mandir');
-
+  const [landmark, setLandmark] = useState(userData.landmark);
+  const [salary, setSalary] = useState(userData.salary);
   const location = () => {
     Geolocation.getCurrentPosition(position => {
       const data = position;
@@ -47,11 +49,48 @@ const Profile = ({navigation, userData}) => {
     });
   };
 
+  const handleUpdate = () => {
+    const updatedData = {
+      username: userName,
+      name,
+      mobile: phone,
+      email,
+      areacovered: businessLoaction,
+      latitudelongitude: homeLocation,
+      designation,
+      landmark,
+      password,
+      imageupload: 'image.png',
+      accountstatus: accountStatus,
+      employmenttype: status,
+      address,
+      salary,
+    };
+    console.log(updatedData, 'Line 63');
+
+    fetch(`https://crm.aarogyaseva.co.in/api/employee/${userId}/edit`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(updatedData),
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Line 79', data);
+        if (data.status === 200) {
+          Alert.alert('Success', 'Profile Update Sycessfully');
+          navigation.navigate('JobList');
+        } else {
+          Alert.alert('Error', 'Faild to update profile');
+        }
+      })
+      .catch(error => {
+        console.log('Error updating Profile:', error);
+        Alert.alert('Error', 'An Error Occured while Updating Profile');
+      });
+  };
   useEffect(() => {
-    Geolocation.getCurrentPosition(position => {
-      const data = position;
-      setHomeLocation(`${data.coords.latitude}, ${data.coords.longitude}`);
-    });
     setUserName(userData.username);
     setName(userData.name);
     setEmail(userData.email);
@@ -61,6 +100,7 @@ const Profile = ({navigation, userData}) => {
     setDesignation(userData.designation);
     setLandmark(userData.landmark);
     setPassword(userData.password);
+    setHomeLocation(userData.latitudelongitude);
   }, [userData]);
 
   return (
@@ -166,6 +206,7 @@ const Profile = ({navigation, userData}) => {
               returnKeyType="next"
               onChangeText={text => setHomeLocation(text)}
             />
+
             <TouchableOpacity onPress={location}>
               <FontAwesome name="edit" size={24} color="gray" />
             </TouchableOpacity>
@@ -203,7 +244,7 @@ const Profile = ({navigation, userData}) => {
               editable={false}
               style={styles.input}
               placeholder="Status of Employement"
-              value={status}
+              value={status === 1 ? 'Permanent' : 'Temporary'}
               keyboardType="default"
               returnKeyType="next"
               onChangeText={text => setStatus(text)}
@@ -216,7 +257,7 @@ const Profile = ({navigation, userData}) => {
               editable={false}
               style={styles.input}
               placeholder="Status Account"
-              value={userData.accountstatus === 1 ? 'Active' : 'Suspended'}
+              value={accountStatus === 1 ? 'Active' : 'Suspended'}
               keyboardType="default"
               returnKeyType="next"
             />
@@ -236,7 +277,7 @@ const Profile = ({navigation, userData}) => {
           </View>
           {/* Button */}
           <TouchableOpacity
-            onPress={() => navigation.navigate('Job List')}
+            onPress={handleUpdate}
             style={styles.touchableOpacityUpdate}>
             <Text style={styles.update}>Update</Text>
           </TouchableOpacity>

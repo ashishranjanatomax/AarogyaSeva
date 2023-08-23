@@ -12,17 +12,18 @@ import Profile from '../dashboard/Profile';
 import LeadFollowUp from '../dashboard/LeadFollowUp';
 import LeadClosed from '../dashboard/LeadClosed';
 import EmployeePerformance from '../dashboard/EmployeePerformance';
+import Outcome from '../screen/Outcome';
+import Logout from '../screen/Logout';
 
 const Drawer = createDrawerNavigator();
 
 const CustomDrawerContent = ({userData, ...props}) => {
   const {name, email, id} = userData;
-  console.log('Line 20', userData);
-  // const [userName, setUserName] = useState('ashishranjanmonal');
-  // const [email, setEmail] = useState('aviashishranjan@gmail.com');
+
   const [profileImage, setProfileImage] = useState(
     'https://avatars.githubusercontent.com/u/52354895?v=4',
   );
+
   return (
     <DrawerContentScrollView {...props}>
       <View
@@ -39,19 +40,15 @@ const CustomDrawerContent = ({userData, ...props}) => {
         <Text>{email}</Text>
       </View>
       <DrawerItemList {...props} />
-      <DrawerItem
-        label="Log Out"
-        onPress={() => Alert.alert('Log Out Successfully')}
-      />
     </DrawerContentScrollView>
   );
 };
 const DrawerNavigation = ({route}) => {
   const userData = route.params.userData;
-  console.log(userData.name, 'Line 50');
+
   return (
     <Drawer.Navigator
-      backBehavior="initialRoute"
+      backBehavior="none"
       initialRouteName="JobList"
       drawerContent={props => (
         <CustomDrawerContent {...props} userData={userData} />
@@ -87,6 +84,7 @@ const DrawerNavigation = ({route}) => {
         component={EmployeePerformance}
         options={{headerShown: false}}
       />
+      <Drawer.Screen name="Logout" component={Logout} />
     </Drawer.Navigator>
   );
 };

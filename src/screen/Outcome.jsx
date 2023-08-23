@@ -17,6 +17,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import DatePicker from 'react-native-date-picker';
 import Geolocation from '@react-native-community/geolocation';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const Outcome = ({navigation, route}) => {
   const [outcome, setOutcome] = useState('');
   const [followUp, setFollowUp] = useState('');
@@ -43,7 +44,14 @@ const Outcome = ({navigation, route}) => {
     'Negative Closed',
   ];
   const followUpName = ['Call', 'Mail', 'Visit'];
-
+  const handleLogout = async () => {
+    try {
+      await AsyncStorage.removeItem('userData');
+      navigation.replace('Login');
+    } catch (error) {
+      console.log('Error Logging out:', error);
+    }
+  };
   const handleSubmit = async () => {
     const postData = {
       employeeId: userId.toString(),
@@ -88,7 +96,9 @@ const Outcome = ({navigation, route}) => {
           resizeMode="contain"
           style={{width: '50%', height: 100}}
         />
-        <Entypo name="log-out" size={50} color="#f08518" />
+        <TouchableOpacity onPress={handleLogout}>
+          <Entypo name="log-out" size={50} color="#f08518" />
+        </TouchableOpacity>
       </View>
       <Text style={styles.title}>Out Come for Follow Up</Text>
 

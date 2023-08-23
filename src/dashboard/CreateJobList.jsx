@@ -648,6 +648,20 @@ const CreateJobList = ({navigation}) => {
         </View>
       </ScrollView>
       {showModal && renderInner()}
+      {open === true && (
+        <DatePicker
+          modal
+          open={open}
+          date={date}
+          onConfirm={date => {
+            setOpen(false);
+            setDate(date);
+          }}
+          onCancel={() => {
+            setOpen(false);
+          }}
+        />
+      )}
     </View>
   );
 };

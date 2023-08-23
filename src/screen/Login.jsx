@@ -14,6 +14,8 @@ import Octicons from 'react-native-vector-icons/Octicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Feather from 'react-native-vector-icons/Feather';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 // Import Location
 import Geolocation from '@react-native-community/geolocation';
 // import axios
@@ -39,6 +41,18 @@ const Login = ({navigation}) => {
         setLocationEnabled(false);
       },
     );
+
+    AsyncStorage.getItem('userData')
+      .then(userData => {
+        if (userData) {
+          navigation.replace('DrawerNavigation', {
+            userData: JSON.parse(userData),
+          });
+        }
+      })
+      .catch(error => {
+        console.log('Error reading user data from Async Storage', error);
+      });
   }, []);
 
   // Handle Login Function
@@ -71,13 +85,14 @@ const Login = ({navigation}) => {
       // Handle your response here
       if (response.data.status === 200) {
         const userData = response.data.data.employee;
-        navigation.navigate('DrawerNavigation', {userData}); // Success: Navigate to next screen
+        await AsyncStorage.setItem('userData', JSON.stringify(userData));
+        navigation.replace('DrawerNavigation', {userData}); // Success: Navigate to next screen
       } else {
         Alert.alert('Login Failed', response.data.message); // Handle login failure
       }
     } catch (error) {
-      Alert.alert('Error', 'An error occurred. Please try again.');
-      console.error(error);
+      Alert.alert('Login Failed', 'Please check user id and Password');
+      console.log(error.message);
     }
     // Perform your login logic here
     // Redirect to the next screen
