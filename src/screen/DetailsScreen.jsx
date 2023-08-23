@@ -103,30 +103,82 @@ const DetailsScreen = ({navigation, route}) => {
             </View>
           </View>
 
-          <Text style={styles.text}>Email: - {jobData.email}</Text>
-          <Text style={styles.text}>Mobile Number: - {jobData.mobile}</Text>
-          <Text style={styles.text}>Discussion: - {jobData.discussion}</Text>
-          <Text style={styles.text}>
-            Date For Follow Up: - {jobData.dateforfollowup}
-          </Text>
-          <Text style={styles.text}>
-            Time For Follow Up: - {jobData.timeforfollowup}
-          </Text>
+          <View style={{flexDirection: 'row', gap: 10}}>
+            <View style={styles.design}>
+              <Text style={styles.text}>Email</Text>
+              <Text style={styles.text}>{jobData.email}</Text>
+            </View>
+            <View style={styles.design}>
+              <Text style={styles.text}>Mobile Number</Text>
+              <Text style={styles.text}>{jobData.mobile}</Text>
+            </View>
+          </View>
 
-          <Text style={styles.text}>Follow Up: - {jobData.followup}</Text>
-          <Text style={styles.text}>
-            GeoGraphical Location: - {jobData.geographicallocation}
-          </Text>
-          <Text style={styles.text}>Landmark: - {jobData.landmark}</Text>
-          <Text style={styles.text}>Middle Name: - Ashish Ranjan</Text>
-          <Text style={styles.text}>
-            Purpose Amount: - {jobData.purposeamount}
-          </Text>
-          <Text style={styles.text}>Source: - {jobData.source}</Text>
-          <Text style={styles.text}>Purpose: - {jobData.purpose}</Text>
-          <Text style={styles.text}>Outcome: - {jobData.outcome}</Text>
-          <Text style={styles.text}>ID: - {jobData.id}</Text>
-          <Text style={styles.text}>Employee Id : - {userId}</Text>
+          <View style={{flexDirection: 'row', gap: 10}}>
+            <View style={styles.design}>
+              <Text style={styles.text}>Discussion</Text>
+              <Text style={styles.text}>{jobData.discussion}</Text>
+            </View>
+            <View style={styles.design}>
+              <Text style={styles.text}>Date For Follow Up</Text>
+              <Text style={styles.text}>{jobData.dateforfollowup}</Text>
+            </View>
+          </View>
+
+          <View style={{flexDirection: 'row', gap: 10}}>
+            <View style={styles.design}>
+              <Text style={styles.text}>Time For Follow Up</Text>
+              <Text style={styles.text}>{jobData.timeforfollowup}</Text>
+            </View>
+            <View style={styles.design}>
+              <Text style={styles.text}>Follow Up</Text>
+              <Text style={styles.text}>{jobData.followup}</Text>
+            </View>
+          </View>
+
+          <View style={{flexDirection: 'row', gap: 10}}>
+            <View style={styles.design}>
+              <Text style={styles.text}>GeoGraphical Location</Text>
+              <Text style={styles.text}>{jobData.geographicallocation}</Text>
+            </View>
+            <View style={styles.design}>
+              <Text style={styles.text}>Landmark</Text>
+              <Text style={styles.text}>{jobData.landmark}</Text>
+            </View>
+          </View>
+
+          <View style={{flexDirection: 'row', gap: 10}}>
+            <View style={styles.design}>
+              <Text style={styles.text}>Purpose Amount</Text>
+              <Text style={styles.text}>{jobData.purposeamount}</Text>
+            </View>
+            <View style={styles.design}>
+              <Text style={styles.text}>Source</Text>
+              <Text style={styles.text}>{jobData.source}</Text>
+            </View>
+          </View>
+
+          <View style={{flexDirection: 'row', gap: 10}}>
+            <View style={styles.design}>
+              <Text style={styles.text}>Purpose</Text>
+              <Text style={styles.text}>{jobData.prospect}</Text>
+            </View>
+            <View style={styles.design}>
+              <Text style={styles.text}>Outcome</Text>
+              <Text style={styles.text}>{jobData.outcome}</Text>
+            </View>
+          </View>
+
+          <View style={{flexDirection: 'row', gap: 10}}>
+            <View style={styles.design}>
+              <Text style={styles.text}>Job List Id</Text>
+              <Text style={styles.text}>{jobData.id}</Text>
+            </View>
+            <View style={styles.design}>
+              <Text style={styles.text}>Employee Id</Text>
+              <Text style={styles.text}>{userId}</Text>
+            </View>
+          </View>
         </View>
 
         <View style={styles.followupsContainer}>
@@ -199,11 +251,14 @@ const styles = StyleSheet.create({
     marginHorizontal: 50,
   },
   followupItem: {
-    borderWidth: 1,
-    borderColor: '#ccc',
+    borderWidth: 2,
+    borderColor: '#f08518',
     padding: 10,
     marginBottom: 10,
-    borderRadius: 5,
+    borderRadius: 10,
+    backgroundColor: 'white',
+    shadowColor: 'black',
+    elevation: 5,
   },
   followupText: {
     fontSize: 16,
