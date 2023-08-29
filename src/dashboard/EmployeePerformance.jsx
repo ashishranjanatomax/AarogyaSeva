@@ -34,6 +34,7 @@ const EmployeePerformance = ({navigation}) => {
           </TouchableOpacity>
           <View style={styles.inputView}>
             <TextInput
+            placeholderTextColor={'black'}
               editable={false}
               value={date.toDateString()}
               style={styles.input}
@@ -59,9 +60,10 @@ const EmployeePerformance = ({navigation}) => {
               keyboardType="number-pad"
               editable={true}
               value={revenu}
+              placeholderTextColor={'black'}
               onChangeText={text => setRevenu(text)}
               style={styles.input}
-              placeholder="Revenu"
+              placeholder="Revenue"
             />
           </View>
         </View>
@@ -115,5 +117,6 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     width: '80%',
     fontWeight: 'bold',
+    color:'black'
   },
 });

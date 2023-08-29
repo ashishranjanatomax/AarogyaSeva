@@ -38,8 +38,8 @@ const Profile = ({navigation, userData}) => {
   const [status, setStatus] = useState(userData.employmenttype);
   const [accountStatus, setAccountStatus] = useState(userData.accountstatus);
   const [password, setPassword] = useState(userData.password);
-  const [showOtpModal, setShowOtpModal] = useState(false);
-  const [showOtpModalPhone, setShowOtpModalPhone] = useState(false);
+  // const [showOtpModal, setShowOtpModal] = useState(false);
+  // const [showOtpModalPhone, setShowOtpModalPhone] = useState(false);
   const [landmark, setLandmark] = useState(userData.landmark);
   const [salary, setSalary] = useState(userData.salary);
   const location = () => {

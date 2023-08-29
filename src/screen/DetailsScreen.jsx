@@ -131,15 +131,15 @@ const DetailsScreen = ({navigation, route}) => {
               <Text style={styles.text}>{jobData.timeforfollowup}</Text>
             </View>
             <View style={styles.design}>
-              <Text style={styles.text}>Follow Up</Text>
+              <Text style={styles.text}>Follow Method</Text>
               <Text style={styles.text}>{jobData.followup}</Text>
             </View>
           </View>
 
           <View style={{flexDirection: 'row', gap: 10}}>
             <View style={styles.design}>
-              <Text style={styles.text}>GeoGraphical Location</Text>
-              <Text style={styles.text}>{jobData.geographicallocation}</Text>
+              <Text style={styles.text}>Status</Text>
+              <Text style={styles.text}>{jobData.outcome}</Text>
             </View>
             <View style={styles.design}>
               <Text style={styles.text}>Landmark</Text>
@@ -149,7 +149,7 @@ const DetailsScreen = ({navigation, route}) => {
 
           <View style={{flexDirection: 'row', gap: 10}}>
             <View style={styles.design}>
-              <Text style={styles.text}>Purpose Amount</Text>
+              <Text style={styles.text}>Business Amount</Text>
               <Text style={styles.text}>{jobData.purposeamount}</Text>
             </View>
             <View style={styles.design}>
@@ -160,16 +160,12 @@ const DetailsScreen = ({navigation, route}) => {
 
           <View style={{flexDirection: 'row', gap: 10}}>
             <View style={styles.design}>
-              <Text style={styles.text}>Purpose</Text>
+              <Text style={styles.text}>Prospect</Text>
               <Text style={styles.text}>{jobData.prospect}</Text>
-            </View>
-            <View style={styles.design}>
-              <Text style={styles.text}>Outcome</Text>
-              <Text style={styles.text}>{jobData.outcome}</Text>
             </View>
           </View>
 
-          <View style={{flexDirection: 'row', gap: 10}}>
+          {/* <View style={{flexDirection: 'row', gap: 10}}>
             <View style={styles.design}>
               <Text style={styles.text}>Job List Id</Text>
               <Text style={styles.text}>{jobData.id}</Text>
@@ -178,7 +174,7 @@ const DetailsScreen = ({navigation, route}) => {
               <Text style={styles.text}>Employee Id</Text>
               <Text style={styles.text}>{userId}</Text>
             </View>
-          </View>
+          </View> */}
         </View>
 
         <View style={styles.followupsContainer}>
@@ -245,6 +241,7 @@ const styles = StyleSheet.create({
   text: {
     fontWeight: '700',
     fontSize: 18,
+    color:'black'
   },
   followupsContainer: {
     marginVertical: 25,
@@ -264,6 +261,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 5,
+    color:'black'
   },
   design: {
     borderWidth: 2,

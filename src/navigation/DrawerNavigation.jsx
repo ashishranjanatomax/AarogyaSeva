@@ -36,8 +36,8 @@ const CustomDrawerContent = ({userData, ...props}) => {
           source={{uri: profileImage}}
           style={{width: 80, height: 80, borderRadius: 40}}
         />
-        <Text style={{marginTop: 10, fontSize: 18}}>{name}</Text>
-        <Text>{email}</Text>
+        <Text style={{marginTop: 10, fontSize: 18,color:'black'}}>{name}</Text>
+        <Text style={{color:'black'}}>{email}</Text>
       </View>
       <DrawerItemList {...props} />
     </DrawerContentScrollView>
@@ -68,7 +68,7 @@ const DrawerNavigation = ({route}) => {
         options={{headerShown: false}}
       />
       <Drawer.Screen
-        name="Lead Closed"
+        name="Closed Lead"
         component={LeadClosed}
         options={{headerShown: false}}
       />

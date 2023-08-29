@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Image,
   Alert,
+  useColorScheme
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 
@@ -20,9 +21,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Geolocation from '@react-native-community/geolocation';
 // import axios
 import Axios from 'axios';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 // Main Function
 const Login = ({navigation}) => {
+  const isDark = useColorScheme() ==='dark';
   // Varibale declaration
   const [username, setUserName] = useState('');
   const [password, setPassword] = useState('');
@@ -101,7 +104,7 @@ const Login = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Aarogya Seva CRM</Text>
+      <Text style={[styles.title]}>Aarogya Seva CRM</Text>
       <Image
         source={require('../../assests/aarogyasevalogo.png')}
         resizeMode="contain"
@@ -116,6 +119,7 @@ const Login = ({navigation}) => {
           keyboardType="number-pad"
           value={username}
           maxLength={10}
+          placeholderTextColor={'gray'}
           onChangeText={text => setUserName(text)}
         />
       </View>
@@ -133,6 +137,7 @@ const Login = ({navigation}) => {
           keyboardType="default"
           secureTextEntry={showPassword === false ? true : false}
           value={password}
+          placeholderTextColor={'gray'}
           onChangeText={text => setPassword(text)}
         />
         <Octicons
@@ -183,6 +188,7 @@ const styles = StyleSheet.create({
   },
   icon: {
     marginTop: 10,
+   
   },
   inputView: {
     flexDirection: 'row',
@@ -198,6 +204,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginLeft: 10,
     width: '80%',
+    color:'gray'
   },
   touchableOpacityContainer: {
     backgroundColor: 'green',
@@ -214,10 +221,11 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   fpassword: {
+    flexDirection:'row',
+    justifyContent:'center',
+    alignItems:'center',
     fontSize: 20,
     color: 'red',
-    textAlign: 'right',
-    marginRight: 35,
     marginVertical: 15,
   },
 });
