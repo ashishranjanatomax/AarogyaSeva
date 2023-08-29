@@ -28,7 +28,7 @@ const Outcome = ({navigation, route}) => {
   const [open, setOpen] = useState(false);
   const [latitude, setLatitude] = useState('');
   const [longitude, setLongitude] = useState('');
-  const [amount, setAmount] = useState('');
+  const [amount, setAmount] = useState('0');
   Geolocation.getCurrentPosition(position => {
     const data = position;
     setLatitude(`${data.coords.latitude}`);
@@ -128,6 +128,7 @@ const Outcome = ({navigation, route}) => {
               onChangeText={text => setNotes(text)}
               style={styles.input}
               multiline={true}
+              placeholderTextColor={'black'}
               placeholder="Enter Notes"
             />
           </View>
@@ -248,6 +249,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginLeft: 10,
     width: '80%',
+    color:'black'
   },
   TouchableOpacityStyle: {
     flexDirection: 'row',

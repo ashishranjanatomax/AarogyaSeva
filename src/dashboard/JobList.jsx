@@ -12,12 +12,14 @@ import {
 import React, {useState, useEffect} from 'react';
 import Header from '../component/Header';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 const JobList = ({navigation, userData}) => {
   // console.log('Line 14', userData.id);
   const [joblist, setJobList] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  
+  
   console.log(userData, 'Line 16');
 
   const fetchData = () => {
@@ -28,7 +30,8 @@ const JobList = ({navigation, userData}) => {
       .then(response => response.json())
       .then(data => {
         if (data.status === 200) {
-          setJobList(data.joblist_and_followup_data);
+          const sortedJobList = data.joblist_and_followup_data.sort((a,b)=> new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime());
+          setJobList(sortedJobList);
         }
       })
       .catch(error => {
@@ -50,9 +53,34 @@ const JobList = ({navigation, userData}) => {
   }, [userData]);
 
   const renderList = ({item}) => {
+    const followUpDate = new Date(item.followups[0]?.visitdate);
+    const currentDate = new Date();
+
+    let label ="";
+   if(followUpDate > currentDate) {
+    label="Upcomimg";
+   }else if(
+    followUpDate.getDate() === currentDate.getDate() &&
+    followUpDate.getMonth () === currentDate.getMonth() &&
+    followUpDate.getFullYear() === currentDate.getFullYear()
+   ){
+    label=`Today ${followUpDate.toLocaleTimeString([],{
+      hour:'2-digit',
+      minute:'2-digit',
+    })}`;
+  }
+  else{
+    label="Pending"
+  }
+   
     return (
       <SafeAreaView style={{flex: 1}}>
         <View style={styles.mainView}>
+          <View style={{flexDirection:'row',justifyContent:'space-between'}}>
+            <MaterialCommunityIcons name="label" size={24} color={label.includes('Pending') ? 'red':'green'}/>
+            <Text style={{ color: label.includes('Pending') ? 'red' : 'green' }}>{label}</Text>
+            <Text style={{ color: 'black' }}>Date: {item.followups[0]?.updated_at} </Text>
+          </View>
           <Text style={styles.text}>
             <Text>Name :- </Text>
             {`${item.title} ${item.firstname} ${item.middlename} ${item.lastname}`}
@@ -68,7 +96,7 @@ const JobList = ({navigation, userData}) => {
                   console.log('Error While Opening Dialer', error);
                 })
               }>
-              <FontAwesome name="phone" size={24} color="#2e509d" />
+              <FontAwesome name="phone" size={18} color="#2e509d" />
             </TouchableOpacity>
           </View>
           <Text style={styles.text}>Address : - {item.address}</Text>
@@ -119,15 +147,16 @@ const JobList = ({navigation, userData}) => {
         Job List
       </Text>
       {isLoading ? (
-        // <ActivityIndicator size="large" color="#2e509d" />
         <Image
           source={require('../../assests/aarogyasevalogo.png')}
           resizeMode="contain"
           style={{
-            marginVertical: 200,
-            width: 250,
-            height: 250,
-            alignSelf: 'center',
+            flexDirection:'row',
+            justifyContent:'center',
+            alignItems:'center',
+            alignContent:'center',
+            alignSelf:'center',
+            width:'75%'
           }}
         />
       ) : (
@@ -167,5 +196,9 @@ const styles = StyleSheet.create({
     marginBottom: 25,
     padding: 15,
   },
-  text: {fontSize: 20, fontWeight: '600'},
+  text: {
+    fontSize: 18, 
+    fontWeight: '600',
+    color:'black'
+  },
 });

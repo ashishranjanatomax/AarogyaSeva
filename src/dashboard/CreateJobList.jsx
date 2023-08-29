@@ -55,7 +55,7 @@ const CreateJobList = ({navigation, userData}) => {
   const [date, setDate] = useState(new Date());
   const [open, setOpen] = useState(false);
   const [descriptionDetails, setDescriptionDetails] = useState('');
-  const [amount, setAmount] = useState('');
+  const [amount, setAmount] = useState('0');
   const [createdby, setCreatedBy] = useState(userData.id);
   const [district, setDistrict] = useState('');
   const [assignedto, setAssignedto] = useState('-');
@@ -364,6 +364,7 @@ const CreateJobList = ({navigation, userData}) => {
               editable={false}
               value={createdby}
               style={styles.input}
+              placeholderTextColor={'black'}
               placeholder={`${userData.name}`}
             />
           </View>
@@ -393,6 +394,7 @@ const CreateJobList = ({navigation, userData}) => {
                 value={firstName}
                 keyboardType="name-phone-pad"
                 returnKeyType="next"
+                placeholderTextColor={'black'}
                 onChangeText={text => setFirstName(text)}
               />
             </View>
@@ -403,6 +405,7 @@ const CreateJobList = ({navigation, userData}) => {
                 value={middleName}
                 keyboardType="name-phone-pad"
                 returnKeyType="next"
+                placeholderTextColor={'black'}
                 onChangeText={text => setMiddleName(text)}
               />
             </View>
@@ -412,6 +415,7 @@ const CreateJobList = ({navigation, userData}) => {
                 placeholder="Last Name"
                 value={lastName}
                 keyboardType="name-phone-pad"
+                placeholderTextColor={'black'}
                 returnKeyType="next"
                 onChangeText={text => setLastName(text)}
               />
@@ -425,6 +429,7 @@ const CreateJobList = ({navigation, userData}) => {
               placeholder="Mobile Number"
               value={phone}
               maxLength={10}
+              placeholderTextColor={'black'}
               keyboardType="number-pad"
               returnKeyType="next"
               onChangeText={text => setPhone(text)}
@@ -437,6 +442,7 @@ const CreateJobList = ({navigation, userData}) => {
               style={styles.input}
               placeholder="Email ID"
               value={email}
+              placeholderTextColor={'black'}
               returnKeyType="next"
               keyboardType="email-address"
               onChangeText={text => setEmail(text)}
@@ -452,6 +458,7 @@ const CreateJobList = ({navigation, userData}) => {
               value={geographicalLocation}
               keyboardType="default"
               returnKeyType="next"
+              placeholderTextColor={'black'}
               onChangeText={text => setGeoGraphicalLocation(text)}
             />
           </View>
@@ -462,6 +469,7 @@ const CreateJobList = ({navigation, userData}) => {
               style={styles.input}
               placeholder="Address"
               value={address}
+              placeholderTextColor={'black'}
               keyboardType="default"
               returnKeyType="next"
               onChangeText={text => setAddress(text)}
@@ -471,6 +479,7 @@ const CreateJobList = ({navigation, userData}) => {
           <View style={styles.inputView}>
             <Entypo name="home" size={24} color="gray" />
             <TextInput
+              placeholderTextColor={'black'}
               style={styles.input}
               placeholder="District"
               value={district}
@@ -483,6 +492,7 @@ const CreateJobList = ({navigation, userData}) => {
           <View style={styles.inputView}>
             <FontAwesome5 name="landmark" size={24} color="gray" />
             <TextInput
+              placeholderTextColor={'black'}
               style={styles.input}
               placeholder="Landmark"
               value={landmark}
@@ -611,6 +621,7 @@ const CreateJobList = ({navigation, userData}) => {
             {/* Description or notes */}
             <View style={styles.inputView}>
               <TextInput
+              placeholderTextColor={'black'}
                 value={descriptionDetails}
                 style={styles.input}
                 multiline={true}
@@ -666,6 +677,7 @@ const CreateJobList = ({navigation, userData}) => {
               <TextInput
                 style={styles.input}
                 value={amount}
+                placeholderTextColor={'black'}
                 placeholder="Purpose Amount"
                 keyboardType="number-pad"
                 onChangeText={text => setAmount(text)}
@@ -724,6 +736,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginLeft: 10,
     width: '80%',
+    color: 'black',
   },
   sectorList: {
     marginTop: 10,
