@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   Image,
   Alert,
-  useColorScheme
+  useColorScheme,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 
@@ -21,11 +21,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Geolocation from '@react-native-community/geolocation';
 // import axios
 import Axios from 'axios';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 // Main Function
 const Login = ({navigation}) => {
-  const isDark = useColorScheme() ==='dark';
+  const isDark = useColorScheme() === 'dark';
   // Varibale declaration
   const [username, setUserName] = useState('');
   const [password, setPassword] = useState('');
@@ -83,11 +82,29 @@ const Login = ({navigation}) => {
           password,
         },
       );
-      console.log(response.data);
+      console.log(response.data, 'Line 85');
 
       // Handle your response here
       if (response.data.status === 200) {
         const userData = response.data.data.employee;
+
+        try {
+          console.log("Line 92",userData.id);
+          const loginTimeResponse = await Axios.post(
+            'https://crm.aarogyaseva.co.in/api/logintime',
+            {
+              employeeid: userData.id,
+            },
+          );
+
+          console.log(loginTimeResponse.data,"Line 99");
+        } catch (error) {
+          console.log(
+            'Error sending employeeId to logintime API',
+            error.message,
+          );
+        }
+
         await AsyncStorage.setItem('userData', JSON.stringify(userData));
         navigation.replace('DrawerNavigation', {userData}); // Success: Navigate to next screen
       } else {
@@ -97,9 +114,6 @@ const Login = ({navigation}) => {
       Alert.alert('Login Failed', 'Please check user id and Password');
       console.log(error.message);
     }
-    // Perform your login logic here
-    // Redirect to the next screen
-    // navigation.navigate('DrawerNavigation');
   };
 
   return (
@@ -188,7 +202,6 @@ const styles = StyleSheet.create({
   },
   icon: {
     marginTop: 10,
-   
   },
   inputView: {
     flexDirection: 'row',
@@ -204,7 +217,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginLeft: 10,
     width: '80%',
-    color:'gray'
+    color: 'gray',
   },
   touchableOpacityContainer: {
     backgroundColor: 'green',
@@ -221,9 +234,9 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   fpassword: {
-    flexDirection:'row',
-    justifyContent:'center',
-    alignItems:'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
     fontSize: 20,
     color: 'red',
     marginVertical: 15,
