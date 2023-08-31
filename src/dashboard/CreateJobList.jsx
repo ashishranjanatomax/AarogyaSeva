@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createRef } from 'react';
+import React, {useState, useEffect, createRef} from 'react';
 import {
   ActivityIndicator,
   Image,
@@ -10,8 +10,8 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
-import { Camera, useCameraDevices } from 'react-native-vision-camera';
+import {Picker} from '@react-native-picker/picker';
+import {Camera, useCameraDevices} from 'react-native-vision-camera';
 import ImagePicker from 'react-native-image-crop-picker';
 import Header from '../component/Header';
 // import Vector Icons
@@ -27,7 +27,7 @@ import Geolocation from '@react-native-community/geolocation';
 import DatePicker from 'react-native-date-picker';
 
 // Main Function
-const CreateJobList = ({ navigation, userData }) => {
+const CreateJobList = ({navigation, userData}) => {
   // State varibale declararation
 
   const [showReferenceInput, setShowReferenceInput] = useState(false);
@@ -59,8 +59,8 @@ const CreateJobList = ({ navigation, userData }) => {
   const [createdby, setCreatedBy] = useState(userData.id);
   const [assignedto, setAssignedto] = useState(userData.id);
   // Porspect
-    const [data,setData] = useState([]);
-    const [purposeName,setPurposeName] = ('');
+  const [data, setData] = useState([]);
+  const [purposeName, setPurposeName] = '';
   // Address
   const [selectedDistrict, setSelectedDistrict] = useState('');
   const [selectedSubdivision, setSelectedSubdivision] = useState('');
@@ -70,7 +70,11 @@ const CreateJobList = ({ navigation, userData }) => {
   const [subdivisions, setSubdivisions] = useState([]);
   const [blocks, setBlocks] = useState([]);
   const [panchayats, setPanchayats] = useState([]);
-
+  // For Background
+  const [backgrounds, setBackgrounds] = useState([]);
+  const [selectedBackground, setSelectedBackground] = useState('');
+  const [subFields, setSubFields] = useState([]);
+  const [selectedSubField, setSelectedSubField] = useState('');
   // console.log(createdby, 'Line 62');
   const outComeName = [
     'Positive',
@@ -93,7 +97,9 @@ const CreateJobList = ({ navigation, userData }) => {
   useEffect(() => {
     const fetchDistricts = async () => {
       try {
-        const response = await fetch('https://crm.aarogyaseva.co.in/api/districts');
+        const response = await fetch(
+          'https://crm.aarogyaseva.co.in/api/districts',
+        );
         const data = await response.json();
         setDistricts(data);
       } catch (error) {
@@ -103,25 +109,28 @@ const CreateJobList = ({ navigation, userData }) => {
     fetchDistricts();
   }, []);
 
-  useEffect (() => {
-    fetchData()
-  },[])
+  useEffect(() => {
+    fetchData();
+    
+  }, []);
 
   const fetchData = async () => {
-    try{
+    try {
       const response = await fetch('https://crm.aarogyaseva.co.in/api/purpose');
       const jsonData = await response.json();
       if (jsonData.status === 200) {
         setData(jsonData.data);
       }
-    }catch (error) {
-      console.log('Error fetching Data',error);
+    } catch (error) {
+      console.log('Error fetching Data', error);
     }
-  }
+  };
 
-  const fetchSubdivisions = async (districtId) => {
+  const fetchSubdivisions = async districtId => {
     try {
-      const response = await fetch(`https://crm.aarogyaseva.co.in/api/districts/${districtId}`);
+      const response = await fetch(
+        `https://crm.aarogyaseva.co.in/api/districts/${districtId}`,
+      );
       const data = await response.json();
       setSubdivisions(data);
     } catch (error) {
@@ -131,7 +140,9 @@ const CreateJobList = ({ navigation, userData }) => {
 
   const fetchBlocks = async (districtId, subdivisionId) => {
     try {
-      const response = await fetch(`https://crm.aarogyaseva.co.in/api/districts/${districtId}/${subdivisionId}`);
+      const response = await fetch(
+        `https://crm.aarogyaseva.co.in/api/districts/${districtId}/${subdivisionId}`,
+      );
       const data = await response.json();
       setBlocks(data);
     } catch (error) {
@@ -141,7 +152,9 @@ const CreateJobList = ({ navigation, userData }) => {
 
   const fetchPanchayats = async (districtId, subdivisionId, blockId) => {
     try {
-      const response = await fetch(`https://crm.aarogyaseva.co.in/api/districts/${districtId}/${subdivisionId}/${blockId}`);
+      const response = await fetch(
+        `https://crm.aarogyaseva.co.in/api/districts/${districtId}/${subdivisionId}/${blockId}`,
+      );
       const data = await response.json();
       setPanchayats(data);
     } catch (error) {
@@ -149,7 +162,29 @@ const CreateJobList = ({ navigation, userData }) => {
     }
   };
 
+  useEffect(() => {
+    fetch('https://crm.aarogyaseva.co.in/api/backgroundlist/')
+      .then(response => response.json())
+      .then(data => {
+        if (data.status === 'success') {
+          setBackgrounds(data.data);
+        }
+      })
+      .catch(error => console.log('Error fetching Backgrounds', error.message));
+  }, []);
 
+  const handleBackgroundChange = background => {
+    setSelectedBackground(background);
+    setSelectedSubField('');
+    fetch(`https://crm.aarogyaseva.co.in/api/backgroundlist/${background}`)
+      .then(response => response.json())
+      .then(data => {
+        if (data.status === 'success') {
+          setSubFields(data.data);
+        }
+      })
+      .catch(error => console.error('Error fetching subfields:', error));
+  };
 
   bs = createRef();
   // Handle submit function. it control all the functionality related to submit
@@ -184,14 +219,7 @@ const CreateJobList = ({ navigation, userData }) => {
         return;
       }
 
-      if (selectedSector.trim() === '') {
-        Alert.alert('Error', 'Please select the sector');
-        return;
-      }
-      if (selectedSectorName.trim() === '') {
-        Alert.alert('Error', 'Please select the sector name');
-        return;
-      }
+      
       if (image.trim() === '') {
         Alert.alert('Error', 'Please upload image');
         return;
@@ -216,8 +244,8 @@ const CreateJobList = ({ navigation, userData }) => {
         address: address,
         landmark: landmark,
         prospect: purpose,
-        backgroundsector: selectedSector,
-        background: selectedSectorName,
+        backgroundsector: selectedBackground,
+        background: selectedSubField,
         image: 'image',
         discussion: descriptionDetails,
         note: descriptionDetails,
@@ -229,9 +257,9 @@ const CreateJobList = ({ navigation, userData }) => {
         timeforfollowup: date.toTimeString(),
         createdby: createdby.toString(),
         district: selectedDistrict,
-        subdivision: subdivisions,
-        individualblock: blocks,
-        panchayat: panchayats,
+        subdivision: selectedSubdivision,
+        individualblock: selectedBlock,
+        panchayat: selectedPanchayat,
         assignedto: assignedto.toString(),
       };
       console.log(formData, 'line 127');
@@ -296,71 +324,13 @@ const CreateJobList = ({ navigation, userData }) => {
     return <ActivityIndicator />;
   }
 
- 
   const sourceOfLeed = ['Website', 'TeleCall', 'Reference', 'Direct'];
-  const PersonBackground = [
-    {
-      id: 1,
-      sector: 'Health Care Worker',
-      sectorName: [
-        {
-          id: 1,
-          name: 'RMP/QUCAK',
-        },
-        {
-          id: 2,
-          name: 'Mediacal Store',
-        },
-        {
-          id: 3,
-          name: 'Flabo/Lab Tech',
-        },
-        {
-          id: 4,
-          name: 'Pharma',
-        },
-        {
-          id: 5,
-          name: 'Poly Clinc',
-        },
-        {
-          id: 6,
-          name: 'Digonostic Center',
-        },
-        {
-          id: 7,
-          name: 'Nursing Home',
-        },
-        {
-          id: 8,
-          name: 'Health Care Insulate',
-        },
-        {
-          id: 9,
-          name: 'Akash Worker',
-        },
-      ],
-    },
-    {
-      id: 2,
-      sector: 'Non Helth Care Worker',
-      sectorName: [
-        {
-          id: 1,
-          name: 'Ashish',
-        },
-      ],
-    },
-    {
-      id: 3,
-      sector: 'Other',
-    },
-  ];
+  
 
   const renderInner = () => {
     return (
       <View style={styles.panel}>
-        <View style={{ alignItems: 'center' }}>
+        <View style={{alignItems: 'center'}}>
           <Text style={styles.panelTitle}>Upload Photo</Text>
           <Text style={styles.panelSubtitle}>Choose Your Profile Picture</Text>
         </View>
@@ -391,7 +361,7 @@ const CreateJobList = ({ navigation, userData }) => {
         <Text style={styles.heading}>Create Job List</Text>
 
         <View style={styles.textInput}>
-          <View style={{ flexDirection: 'column' }}>
+          <View style={{flexDirection: 'column'}}>
             <View style={styles.inputView}>
               <MaterialIcons name="source" size={24} color="gray" />
               <Picker
@@ -556,11 +526,9 @@ const CreateJobList = ({ navigation, userData }) => {
             </Picker>
           </View>
 
-
           {/* Subdivision Picker */}
           {subdivisions.length > 0 && (
             <View style={styles.inputView}>
-              {/* ... Similar pattern for other icons ... */}
               <Picker
                 style={styles.input}
                 selectedValue={selectedSubdivision}
@@ -585,14 +553,17 @@ const CreateJobList = ({ navigation, userData }) => {
           {/* Block Picker */}
           {blocks.length > 0 && (
             <View style={styles.inputView}>
-              {/* ... Similar pattern for other icons ... */}
               <Picker
                 style={styles.input}
                 selectedValue={selectedBlock}
                 onValueChange={itemValue => {
                   setSelectedBlock(itemValue);
                   setSelectedPanchayat('');
-                  fetchPanchayats(selectedDistrict, selectedSubdivision, itemValue); // Fetch panchayats for the selected block
+                  fetchPanchayats(
+                    selectedDistrict,
+                    selectedSubdivision,
+                    itemValue,
+                  ); // Fetch panchayats for the selected block
                 }}>
                 <Picker.Item label="Select Block" value="" />
                 {blocks.map((block, index) => (
@@ -647,13 +618,13 @@ const CreateJobList = ({ navigation, userData }) => {
               selectedValue={purpose}
               onValueChange={itemValue => setPurpose(itemValue)}>
               <Picker.Item label="Select Purpose" value="" />
-              {data.map((item) => (
-          <Picker.Item 
-            key={item.id}
-            label={`${item.purpose} - Amount: ${item.amount}`}
-            value={item.purpose}
-          />
-        ))}
+              {data.map(item => (
+                <Picker.Item
+                  key={item.id}
+                  label={`${item.purpose} - Amount: ${item.amount}`}
+                  value={item.purpose}
+                />
+              ))}
             </Picker>
           </View>
           {/* Background */}
@@ -662,23 +633,20 @@ const CreateJobList = ({ navigation, userData }) => {
             <Octicons name="workflow" size={24} color="gray" />
             <Picker
               style={styles.input}
-              selectedValue={selectedSector}
-              onValueChange={itemValue => {
-                setSelectedSector(itemValue);
-                setSelectedSectorName('');
-              }}>
-              <Picker.Item label="Select Sector" value="" />
-              {PersonBackground.map(sector => (
+              selectedValue={selectedBackground}
+              onValueChange={handleBackgroundChange}>
+              <Picker.Item label="Select Background" value="" />
+              {backgrounds.map((background,index) => (
                 <Picker.Item
-                  key={sector.id}
-                  label={sector.sector}
-                  value={sector.id.toString()}
+                  key={index}
+                  label={background}
+                  value={background}
                 />
               ))}
             </Picker>
           </View>
           {/* Picker for Sector Name */}
-          {selectedSector !== '' && selectedSector !== '3' ? (
+          {selectedBackground && (
             <View style={styles.inputView}>
               <MaterialCommunityIcons
                 name="account-group"
@@ -687,21 +655,19 @@ const CreateJobList = ({ navigation, userData }) => {
               />
               <Picker
                 style={styles.input}
-                selectedValue={selectedSectorName}
-                onValueChange={itemValue => setSelectedSectorName(itemValue)}>
-                <Picker.Item label="Select Sector Name" value="" />
-                {PersonBackground.find(
-                  sector => sector.id.toString() === selectedSector,
-                )?.sectorName.map(subsector => (
+                selectedValue={selectedSubField}
+                onValueChange={setSelectedSubField}>
+                <Picker.Item label="Select Sub Background Name" value="" />
+                {subFields.map((subField) => (
                   <Picker.Item
-                    key={subsector.id}
-                    label={subsector.name}
-                    value={subsector.name}
+                    key={subField.id}
+                    label={subField.background}
+                    value={subField.background}
                   />
                 ))}
               </Picker>
             </View>
-          ) : null}
+          ) }
           {/* TextInput for Other Sector Name */}
           {selectedSector === '3' ? (
             <View style={styles.inputView}>
@@ -717,7 +683,7 @@ const CreateJobList = ({ navigation, userData }) => {
 
           {/* Upload Image */}
           <TouchableOpacity
-            style={{ backgroundColor: '#f08518', padding: 15, borderRadius: 10 }}
+            style={{backgroundColor: '#f08518', padding: 15, borderRadius: 10}}
             onPress={() => setShowModal(true)}>
             <Text
               style={{
@@ -731,9 +697,9 @@ const CreateJobList = ({ navigation, userData }) => {
           </TouchableOpacity>
           <View style={styles.inputView}>
             <Image
-              source={{ uri: image }}
-              style={{ height: 100, width: 100 }}
-              imageStyle={{ borderRadius: 15 }}
+              source={{uri: image}}
+              style={{height: 100, width: 100}}
+              imageStyle={{borderRadius: 15}}
             />
           </View>
 
@@ -798,7 +764,7 @@ const CreateJobList = ({ navigation, userData }) => {
             {/* Time Picker */}
             <TouchableOpacity
               style={styles.inputView}
-            // onPress={() => setTimeOpen(true)}
+              // onPress={() => setTimeOpen(true)}
             >
               <Entypo name="back-in-time" size={24} color="gray" />
               <TextInput

@@ -9,10 +9,8 @@ import {
 import JobList from '../dashboard/JobList';
 import CreateJobList from '../dashboard/CreateJobList';
 import Profile from '../dashboard/Profile';
-import LeadFollowUp from '../dashboard/LeadFollowUp';
 import LeadClosed from '../dashboard/LeadClosed';
 import EmployeePerformance from '../dashboard/EmployeePerformance';
-import Outcome from '../screen/Outcome';
 import Logout from '../screen/Logout';
 import History from '../dashboard/History';
 import AdminJobAssigned from '../dashboard/AdminJobAssigned';
@@ -76,13 +74,12 @@ const DrawerNavigation = ({route}) => {
       <Drawer.Screen name="Closed Lead " options={{headerShown: false}}>
         {props => <LeadClosed {...props} userData={userData} />}
       </Drawer.Screen>
+      <Drawer.Screen name="Log Out " options={{headerShown: false}}>
+        {props => <Logout {...props} userData={userData} />}
+      </Drawer.Screen>
       
-      <Drawer.Screen
-        name="Lead Follow Up"
-        component={LeadFollowUp}
-        options={{headerShown: false}}
-      />
-      <Drawer.Screen name="Logout" component={Logout} />
+      
+     
     </Drawer.Navigator>
   );
 };
