@@ -29,7 +29,7 @@ import DatePicker from 'react-native-date-picker';
 // Main Function
 const CreateJobList = ({ navigation, userData }) => {
   // State varibale declararation
-  // console.log(userData.name, 'Line 32');
+
   const [showReferenceInput, setShowReferenceInput] = useState(false);
   const [refernceText, setReferenceText] = useState('');
   const [source, setSource] = useState('');
@@ -57,10 +57,10 @@ const CreateJobList = ({ navigation, userData }) => {
   const [descriptionDetails, setDescriptionDetails] = useState('');
   const [amount, setAmount] = useState('0');
   const [createdby, setCreatedBy] = useState(userData.id);
-
   const [assignedto, setAssignedto] = useState(userData.id);
-
-
+  // Porspect
+    const [data,setData] = useState([]);
+    const [purposeName,setPurposeName] = ('');
   // Address
   const [selectedDistrict, setSelectedDistrict] = useState('');
   const [selectedSubdivision, setSelectedSubdivision] = useState('');
@@ -73,13 +73,13 @@ const CreateJobList = ({ navigation, userData }) => {
 
   // console.log(createdby, 'Line 62');
   const outComeName = [
-    'Positve',
+    'Positive',
     'Negative',
     'Neutral',
-    'Positve Closed',
+    'Positive Closed',
     'Negative Closed',
   ];
-  const followUpName = ['Call', 'Mail', 'Visit'];
+  const followUpName = ['Call', 'Mail', 'Visit', 'None'];
 
   useEffect(() => {
     Geolocation.getCurrentPosition(position => {
@@ -102,6 +102,22 @@ const CreateJobList = ({ navigation, userData }) => {
     };
     fetchDistricts();
   }, []);
+
+  useEffect (() => {
+    fetchData()
+  },[])
+
+  const fetchData = async () => {
+    try{
+      const response = await fetch('https://crm.aarogyaseva.co.in/api/purpose');
+      const jsonData = await response.json();
+      if (jsonData.status === 200) {
+        setData(jsonData.data);
+      }
+    }catch (error) {
+      console.log('Error fetching Data',error);
+    }
+  }
 
   const fetchSubdivisions = async (districtId) => {
     try {
@@ -167,10 +183,7 @@ const CreateJobList = ({ navigation, userData }) => {
         Alert.alert('Error', 'Please enter landmark location or name');
         return;
       }
-      if (purpose.trim() === '') {
-        Alert.alert('Error', 'Please select Purpose');
-        return;
-      }
+
       if (selectedSector.trim() === '') {
         Alert.alert('Error', 'Please select the sector');
         return;
@@ -187,10 +200,10 @@ const CreateJobList = ({ navigation, userData }) => {
         Alert.alert('Error', 'Please upload image');
         return;
       }
-      // if (districts.trim() === '') {
-      //   Alert.alert('Error', 'Please enter District Name');
-      //   return;
-      // }
+      if (selectedDistrict.trim() === '') {
+        Alert.alert('Error', 'Please enter District Name');
+        return;
+      }
 
       const formData = {
         source: source,
@@ -215,10 +228,10 @@ const CreateJobList = ({ navigation, userData }) => {
         dateforfollowup: date.toDateString(),
         timeforfollowup: date.toTimeString(),
         createdby: createdby.toString(),
-        district:selectedDistrict,
-        subdivision:subdivisions,
-        individualblock:blocks,
-        panchayat:panchayats,
+        district: selectedDistrict,
+        subdivision: subdivisions,
+        individualblock: blocks,
+        panchayat: panchayats,
         assignedto: assignedto.toString(),
       };
       console.log(formData, 'line 127');
@@ -283,14 +296,7 @@ const CreateJobList = ({ navigation, userData }) => {
     return <ActivityIndicator />;
   }
 
-  const purposeName = [
-    'SPOKE',
-    'SUBHUB',
-    'HUB',
-    'SUPER HUB',
-    'OUT REACH',
-    'OTHER',
-  ];
+ 
   const sourceOfLeed = ['Website', 'TeleCall', 'Reference', 'Direct'];
   const PersonBackground = [
     {
@@ -620,19 +626,6 @@ const CreateJobList = ({ navigation, userData }) => {
             </View>
           )}
 
-          {/* User District */}
-          {/* <View style={styles.inputView}>
-            <Entypo name="home" size={24} color="gray" />
-            <TextInput
-              placeholderTextColor={'black'}
-              style={styles.input}
-              placeholder="District"
-              value={district}
-              keyboardType="default"
-              returnKeyType="next"
-              onChangeText={text => setDistrict(text)}
-            />
-          </View> */}
           {/* Landmark */}
           <View style={styles.inputView}>
             <FontAwesome5 name="landmark" size={24} color="gray" />
@@ -654,16 +647,15 @@ const CreateJobList = ({ navigation, userData }) => {
               selectedValue={purpose}
               onValueChange={itemValue => setPurpose(itemValue)}>
               <Picker.Item label="Select Purpose" value="" />
-              {purposeName.map((purposeName, index) => (
-                <Picker.Item
-                  key={index}
-                  label={purposeName}
-                  value={purposeName}
-                />
-              ))}
+              {data.map((item) => (
+          <Picker.Item 
+            key={item.id}
+            label={`${item.purpose} - Amount: ${item.amount}`}
+            value={item.purpose}
+          />
+        ))}
             </Picker>
           </View>
-
           {/* Background */}
           {/* Picker for Sector */}
           <View style={styles.inputView}>

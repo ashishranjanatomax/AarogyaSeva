@@ -24,7 +24,7 @@ const DetailsScreen = ({navigation, route}) => {
       console.log('Error Logging out:', error);
     }
   };
-  console.log('Line 15', followups);
+  // console.log('Line 15', followups);
 
   const onRefresh = () => {
     setRefreshing(true);
