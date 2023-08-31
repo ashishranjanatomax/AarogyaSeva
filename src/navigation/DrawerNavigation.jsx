@@ -14,6 +14,8 @@ import LeadClosed from '../dashboard/LeadClosed';
 import EmployeePerformance from '../dashboard/EmployeePerformance';
 import Outcome from '../screen/Outcome';
 import Logout from '../screen/Logout';
+import History from '../dashboard/History';
+import AdminJobAssigned from '../dashboard/AdminJobAssigned';
 
 const Drawer = createDrawerNavigator();
 
@@ -59,27 +61,25 @@ const DrawerNavigation = ({route}) => {
       <Drawer.Screen name="JobList" options={{headerShown: false}}>
         {props => <JobList {...props} userData={userData} />}
       </Drawer.Screen>
+      <Drawer.Screen name='Assigned Job' options={{headerShown:false}}>
+        {props=> <AdminJobAssigned {...props} userData={userData}/>}
+      </Drawer.Screen>
       <Drawer.Screen name="Create Lead" options={{headerShown: false}}>
         {props => <CreateJobList {...props} userData={userData} />}
       </Drawer.Screen>
+      <Drawer.Screen name="Total Worked " options={{headerShown: false}}>
+        {props => <History {...props} userData={userData} />}
+      </Drawer.Screen>
+      <Drawer.Screen name="Performance " options={{headerShown: false}}>
+        {props => <EmployeePerformance {...props} userData={userData} />}
+      </Drawer.Screen>
+      <Drawer.Screen name="Closed Lead " options={{headerShown: false}}>
+        {props => <LeadClosed {...props} userData={userData} />}
+      </Drawer.Screen>
+      
       <Drawer.Screen
         name="Lead Follow Up"
         component={LeadFollowUp}
-        options={{headerShown: false}}
-      />
-      <Drawer.Screen
-        name="Closed Lead"
-        component={LeadClosed}
-        options={{headerShown: false}}
-      />
-      {/* <Drawer.Screen
-        name="OutCome"
-        component={Outcome}
-        options={{headerShown: false}}
-      /> */}
-      <Drawer.Screen
-        name="Performance"
-        component={EmployeePerformance}
         options={{headerShown: false}}
       />
       <Drawer.Screen name="Logout" component={Logout} />

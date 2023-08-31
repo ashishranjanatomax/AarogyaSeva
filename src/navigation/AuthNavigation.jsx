@@ -10,6 +10,8 @@ import Outcome from '../screen/Outcome';
 import Profile from '../dashboard/Profile';
 import JobList from '../dashboard/JobList';
 import DetailsScreen from '../screen/DetailsScreen';
+import ClosedDetailsScreen from '../screen/ClosedDetailsScreen';
+import ClouserDate from '../screen/ClouserDate';
 
 const Stack = createNativeStackNavigator();
 
@@ -61,6 +63,15 @@ const AuthNavigation = () => {
         component={DetailsScreen}
         options={{headerShown: false}}
       />
+       <Stack.Screen
+        name="ClosedDetailsScreen"
+        component={ClosedDetailsScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+      name='ClouserDate'
+      component={ClouserDate}
+      options={{headerShown:false}}/>
     </Stack.Navigator>
   );
 };
