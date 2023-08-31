@@ -1,19 +1,20 @@
 import {
-  FlatList,
-  Image,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  RefreshControl,
-} from 'react-native';
-import React, {useState} from 'react';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import Entypo from 'react-native-vector-icons/Entypo';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-const DetailsScreen = ({navigation, route}) => {
-  const {jobData, userId, followups} = route.params;
+    FlatList,
+    Image,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
+    RefreshControl,
+  } from 'react-native';
+  import React, {useState} from 'react';
+  import Ionicons from 'react-native-vector-icons/Ionicons';
+  import Entypo from 'react-native-vector-icons/Entypo';
+  import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const ClosedDetailsScreen = ({navigation, route}) => {
+    const {jobData, userId, followups} = route.params;
   const [refreshing, setRefreshing] = useState(false);
 
   const handleLogout = async () => {
@@ -47,6 +48,7 @@ const DetailsScreen = ({navigation, route}) => {
       {/* Render other followup data here */}
     </View>
   );
+
   return (
     <View style={{flex: 1,backgroundColor:'white'}}>
       <View style={styles.container}>
@@ -179,94 +181,85 @@ const DetailsScreen = ({navigation, route}) => {
             style={{flex: 1}}
           />
         </View>
-        <TouchableOpacity
-          onPress={() =>
-            navigation.navigate('OutCome', {
-              joblistId: jobData.id,
-              userId: userId,
-            })
-          }
-          style={styles.touchableOpacityContainer}>
-          <Text style={styles.LoginText}>Add Next Follow Up </Text>
-        </TouchableOpacity>
       </ScrollView>
     </View>
-  );
-};
+  )
+}
 
-export default DetailsScreen;
+export default ClosedDetailsScreen
 
 const styles = StyleSheet.create({
-  container: {
-    height: 'auto',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignContent: 'center',
-    alignItems: 'center',
-    borderBottomWidth: 2,
-    borderBottomColor: '#2e509d',
-    backgroundColor:'white'
-  },
-  heading: {
-    color: '#2e509d',
-    fontSize: 22,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginVertical: 15,
-  },
-  touchableOpacityContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    alignSelf: 'center',
-    backgroundColor: 'green',
-    width: '80%',
-    height: 50,
-    borderRadius: 25,
-    marginVertical: 15,
-  },
-  LoginText: {
-    color: 'white',
-    fontSize: 18,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  text: {
-    fontWeight: '700',
-    fontSize: 16,
-    color:'black'
-  },
-  followupsContainer: {
-    marginVertical: 25,
-    marginHorizontal: 50,
-  },
-  followupItem: {
-    borderWidth: 2,
-    borderColor: '#f08518',
-    padding: 10,
-    marginBottom: 10,
-    borderRadius: 10,
-    backgroundColor: 'white',
-    shadowColor: 'black',
-    elevation: 5,
-  },
-  followupText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 5,
-    color:'black'
-  },
-  design: {
-    borderWidth: 2,
-    padding: 10,
-    borderRadius: 10,
-    borderColor: '#2e509d',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    shadowColor: 'black',
-    elevation: 15,
-    backgroundColor: 'white',
-    gap:5,
-    alignItems: 'center',
-  },
-});
+    container: {
+        height: 'auto',
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignContent: 'center',
+        alignItems: 'center',
+        borderBottomWidth: 2,
+        borderBottomColor: '#2e509d',
+        backgroundColor:'white'
+      },
+      heading: {
+        color: '#2e509d',
+        fontSize: 22,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        marginVertical: 15,
+      },
+      touchableOpacityContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        alignSelf: 'center',
+        backgroundColor: 'green',
+        width: '80%',
+        height: 50,
+        borderRadius: 25,
+        marginVertical: 15,
+      },
+      LoginText: {
+        color: 'white',
+        fontSize: 18,
+        fontWeight: 'bold',
+        textAlign: 'center',
+      },
+      text: {
+        fontWeight: '700',
+        fontSize: 16,
+        color:'black'
+      },
+      followupsContainer: {
+        marginVertical: 25,
+        marginHorizontal: 50,
+      },
+      followupItem: {
+        borderWidth: 2,
+        borderColor: '#f08518',
+        padding: 10,
+        marginBottom: 10,
+        borderRadius: 10,
+        backgroundColor: 'white',
+        shadowColor: 'black',
+        elevation: 5,
+      },
+      followupText: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginBottom: 5,
+        color:'black'
+      },
+      design: {
+        borderWidth: 2,
+        padding: 10,
+        borderRadius: 10,
+        borderColor: '#2e509d',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        shadowColor: 'black',
+        elevation: 15,
+        backgroundColor: 'white',
+        gap:5,
+        alignItems: 'center',
+      },
+    
+})

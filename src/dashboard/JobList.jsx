@@ -13,6 +13,8 @@ import React, {useState, useEffect} from 'react';
 import Header from '../component/Header';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+
+
 const JobList = ({navigation, userData}) => {
   // console.log('Line 14', userData.id);
   const [joblist, setJobList] = useState([]);
@@ -20,7 +22,7 @@ const JobList = ({navigation, userData}) => {
   const [isLoading, setIsLoading] = useState(true);
   
   
-  console.log(userData, 'Line 16');
+  // console.log(userData, 'Line 16');
 
   const fetchData = () => {
     setIsLoading(true);
@@ -64,22 +66,22 @@ const JobList = ({navigation, userData}) => {
     followUpDate.getMonth () === currentDate.getMonth() &&
     followUpDate.getFullYear() === currentDate.getFullYear()
    ){
-    label=`Today ${followUpDate.toLocaleTimeString([],{
-      hour:'2-digit',
-      minute:'2-digit',
-    })}`;
+    label=`Today`;
   }
   else{
     label="Pending"
   }
-   
+   const date = item.followups[0]?.visitdate
+   const time = item.followups[0]?.visittime
     return (
       <SafeAreaView style={{flex: 1}}>
         <View style={styles.mainView}>
           <View style={{flexDirection:'row',justifyContent:'space-between'}}>
             <MaterialCommunityIcons name="label" size={24} color={label.includes('Pending') ? 'red':'green'}/>
             <Text style={{ color: label.includes('Pending') ? 'red' : 'green' }}>{label}</Text>
-            <Text style={{ color: 'black' }}>Date: {item.followups[0]?.updated_at} </Text>
+            <Text style={{ color: 'black' }}>Date: {date} </Text>
+            {/* <Text style={{ color: 'black' }}>Time: {time} </Text> */}
+
           </View>
           <Text style={styles.text}>
             <Text>Name :- </Text>
@@ -87,7 +89,7 @@ const JobList = ({navigation, userData}) => {
           </Text>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <Text style={styles.text}>
-              <Text>Mobile Number: - </Text>
+              <Text>Mobile Number:-</Text>
               {item.mobile}
             </Text>
             <TouchableOpacity
@@ -96,39 +98,15 @@ const JobList = ({navigation, userData}) => {
                   console.log('Error While Opening Dialer', error);
                 })
               }>
-              <FontAwesome name="phone" size={18} color="#2e509d" />
+              <FontAwesome name="phone" style={{marginLeft:5,backgroundColor:'#f08518',borderRadius:2,padding:5}} size={18} color="#2e509d" />
             </TouchableOpacity>
           </View>
           <Text style={styles.text}>Address : - {item.address}</Text>
           <Text style={styles.text}>Purpose : - {item.prospect}</Text>
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <Text style={styles.text}>
-              <Text>Required Action: - </Text>
-              {item.followup}
-            </Text>
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate('DetailsScreen', {
-                  jobData: item,
-                  userId: userData.id,
-                  followups: item.followups,
-                })
-              }
-              style={{
-                backgroundColor: '#f08518',
-                borderRadius: 15,
-                height: 35,
-                width: 100,
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Text style={{color: '#2e509d', fontWeight: '500'}}>
-                View Details
-              </Text>
-            </TouchableOpacity>
-          </View>
+          <Text style={styles.text}>Required Action:-{item.followup}</Text>
+          <TouchableOpacity style={styles.touchableopacity} onPress={() => navigation.navigate('DetailsScreen',{jobData:item,userId:userData.id,followups:item.followups,})}>
+            <Text style={[styles.text,{color:'#2e509d'}]}>View Details</Text>
+          </TouchableOpacity>
         </View>
       </SafeAreaView>
     );
@@ -144,7 +122,7 @@ const JobList = ({navigation, userData}) => {
           textAlign: 'center',
           marginVertical: 15,
         }}>
-        Job List
+        Created Lead
       </Text>
       {isLoading ? (
         <Image
@@ -161,13 +139,14 @@ const JobList = ({navigation, userData}) => {
         />
       ) : (
         <FlatList
-          data={joblist}
-          renderItem={renderList}
-          keyExtractor={item => item.id.toString()}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
-        />
+        data={joblist}
+        renderItem={renderList}
+        keyExtractor={item => item.id.toString()}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      />
+        
       )}
     </View>
   );
@@ -200,5 +179,14 @@ const styles = StyleSheet.create({
     fontSize: 18, 
     fontWeight: '600',
     color:'black'
+  },
+  touchableopacity: {
+    backgroundColor: '#f08518',
+    borderRadius: 10,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginVertical: 10,
+    padding: 10,
   },
 });

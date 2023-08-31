@@ -1,4 +1,4 @@
-import React, {useState, useEffect, createRef} from 'react';
+import React, { useState, useEffect, createRef } from 'react';
 import {
   ActivityIndicator,
   Image,
@@ -10,8 +10,8 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
-import {Picker} from '@react-native-picker/picker';
-import {Camera, useCameraDevices} from 'react-native-vision-camera';
+import { Picker } from '@react-native-picker/picker';
+import { Camera, useCameraDevices } from 'react-native-vision-camera';
 import ImagePicker from 'react-native-image-crop-picker';
 import Header from '../component/Header';
 // import Vector Icons
@@ -27,7 +27,7 @@ import Geolocation from '@react-native-community/geolocation';
 import DatePicker from 'react-native-date-picker';
 
 // Main Function
-const CreateJobList = ({navigation, userData}) => {
+const CreateJobList = ({ navigation, userData }) => {
   // State varibale declararation
   // console.log(userData.name, 'Line 32');
   const [showReferenceInput, setShowReferenceInput] = useState(false);
@@ -57,9 +57,21 @@ const CreateJobList = ({navigation, userData}) => {
   const [descriptionDetails, setDescriptionDetails] = useState('');
   const [amount, setAmount] = useState('0');
   const [createdby, setCreatedBy] = useState(userData.id);
-  const [district, setDistrict] = useState('');
-  const [assignedto, setAssignedto] = useState('-');
-  console.log(createdby, 'Line 62');
+
+  const [assignedto, setAssignedto] = useState(userData.id);
+
+
+  // Address
+  const [selectedDistrict, setSelectedDistrict] = useState('');
+  const [selectedSubdivision, setSelectedSubdivision] = useState('');
+  const [selectedBlock, setSelectedBlock] = useState('');
+  const [selectedPanchayat, setSelectedPanchayat] = useState('');
+  const [districts, setDistricts] = useState([]);
+  const [subdivisions, setSubdivisions] = useState([]);
+  const [blocks, setBlocks] = useState([]);
+  const [panchayats, setPanchayats] = useState([]);
+
+  // console.log(createdby, 'Line 62');
   const outComeName = [
     'Positve',
     'Negative',
@@ -77,6 +89,52 @@ const CreateJobList = ({navigation, userData}) => {
       );
     });
   });
+
+  useEffect(() => {
+    const fetchDistricts = async () => {
+      try {
+        const response = await fetch('https://crm.aarogyaseva.co.in/api/districts');
+        const data = await response.json();
+        setDistricts(data);
+      } catch (error) {
+        console.error('Error fetching districts:', error);
+      }
+    };
+    fetchDistricts();
+  }, []);
+
+  const fetchSubdivisions = async (districtId) => {
+    try {
+      const response = await fetch(`https://crm.aarogyaseva.co.in/api/districts/${districtId}`);
+      const data = await response.json();
+      setSubdivisions(data);
+    } catch (error) {
+      console.error('Error fetching subdivisions:', error);
+    }
+  };
+
+  const fetchBlocks = async (districtId, subdivisionId) => {
+    try {
+      const response = await fetch(`https://crm.aarogyaseva.co.in/api/districts/${districtId}/${subdivisionId}`);
+      const data = await response.json();
+      setBlocks(data);
+    } catch (error) {
+      console.error('Error fetching blocks:', error);
+    }
+  };
+
+  const fetchPanchayats = async (districtId, subdivisionId, blockId) => {
+    try {
+      const response = await fetch(`https://crm.aarogyaseva.co.in/api/districts/${districtId}/${subdivisionId}/${blockId}`);
+      const data = await response.json();
+      setPanchayats(data);
+    } catch (error) {
+      console.error('Error fetching panchayats:', error);
+    }
+  };
+
+
+
   bs = createRef();
   // Handle submit function. it control all the functionality related to submit
   const handleSubmit = async () => {
@@ -129,10 +187,10 @@ const CreateJobList = ({navigation, userData}) => {
         Alert.alert('Error', 'Please upload image');
         return;
       }
-      if (district.trim() === '') {
-        Alert.alert('Error', 'Please enter District Name');
-        return;
-      }
+      // if (districts.trim() === '') {
+      //   Alert.alert('Error', 'Please enter District Name');
+      //   return;
+      // }
 
       const formData = {
         source: source,
@@ -156,10 +214,12 @@ const CreateJobList = ({navigation, userData}) => {
         purposeamount: amount,
         dateforfollowup: date.toDateString(),
         timeforfollowup: date.toTimeString(),
-        // employeeid: '1',
         createdby: createdby.toString(),
-        district,
-        assignedto,
+        district:selectedDistrict,
+        subdivision:subdivisions,
+        individualblock:blocks,
+        panchayat:panchayats,
+        assignedto: assignedto.toString(),
       };
       console.log(formData, 'line 127');
       const response = await fetch(
@@ -294,7 +354,7 @@ const CreateJobList = ({navigation, userData}) => {
   const renderInner = () => {
     return (
       <View style={styles.panel}>
-        <View style={{alignItems: 'center'}}>
+        <View style={{ alignItems: 'center' }}>
           <Text style={styles.panelTitle}>Upload Photo</Text>
           <Text style={styles.panelSubtitle}>Choose Your Profile Picture</Text>
         </View>
@@ -325,7 +385,7 @@ const CreateJobList = ({navigation, userData}) => {
         <Text style={styles.heading}>Create Job List</Text>
 
         <View style={styles.textInput}>
-          <View style={{flexDirection: 'column'}}>
+          <View style={{ flexDirection: 'column' }}>
             <View style={styles.inputView}>
               <MaterialIcons name="source" size={24} color="gray" />
               <Picker
@@ -357,16 +417,6 @@ const CreateJobList = ({navigation, userData}) => {
                 />
               </View>
             )}
-          </View>
-          {/* Created By */}
-          <View style={styles.inputView}>
-            <TextInput
-              editable={false}
-              value={createdby}
-              style={styles.input}
-              placeholderTextColor={'black'}
-              placeholder={`${userData.name}`}
-            />
           </View>
           {/* Name Title Picker */}
           <View style={styles.inputView}>
@@ -475,8 +525,103 @@ const CreateJobList = ({navigation, userData}) => {
               onChangeText={text => setAddress(text)}
             />
           </View>
-          {/* User District */}
+
+          {/* District Picker */}
           <View style={styles.inputView}>
+            <Entypo name="home" size={24} color="gray" />
+            <Picker
+              style={styles.input}
+              selectedValue={selectedDistrict}
+              onValueChange={itemValue => {
+                setSelectedDistrict(itemValue);
+                setSelectedSubdivision('');
+                setSelectedBlock('');
+                setSelectedPanchayat('');
+                fetchSubdivisions(itemValue); // Fetch subdivisions for the selected district
+              }}>
+              <Picker.Item label="Select District" value="" />
+              {districts.map((district, index) => (
+                <Picker.Item
+                  key={index}
+                  label={district.district}
+                  value={district.district_id.toString()}
+                />
+              ))}
+            </Picker>
+          </View>
+
+
+          {/* Subdivision Picker */}
+          {subdivisions.length > 0 && (
+            <View style={styles.inputView}>
+              {/* ... Similar pattern for other icons ... */}
+              <Picker
+                style={styles.input}
+                selectedValue={selectedSubdivision}
+                onValueChange={itemValue => {
+                  setSelectedSubdivision(itemValue);
+                  setSelectedBlock('');
+                  setSelectedPanchayat('');
+                  fetchBlocks(selectedDistrict, itemValue); // Fetch blocks for the selected subdivision
+                }}>
+                <Picker.Item label="Select Subdivision" value="" />
+                {subdivisions.map((subdivision, index) => (
+                  <Picker.Item
+                    key={index}
+                    label={subdivision.subdivision}
+                    value={subdivision.subdivision_id.toString()}
+                  />
+                ))}
+              </Picker>
+            </View>
+          )}
+
+          {/* Block Picker */}
+          {blocks.length > 0 && (
+            <View style={styles.inputView}>
+              {/* ... Similar pattern for other icons ... */}
+              <Picker
+                style={styles.input}
+                selectedValue={selectedBlock}
+                onValueChange={itemValue => {
+                  setSelectedBlock(itemValue);
+                  setSelectedPanchayat('');
+                  fetchPanchayats(selectedDistrict, selectedSubdivision, itemValue); // Fetch panchayats for the selected block
+                }}>
+                <Picker.Item label="Select Block" value="" />
+                {blocks.map((block, index) => (
+                  <Picker.Item
+                    key={index}
+                    label={block.individualblock}
+                    value={block.individualblock_id.toString()}
+                  />
+                ))}
+              </Picker>
+            </View>
+          )}
+
+          {/* Panchayat Picker */}
+          {panchayats.length > 0 && (
+            <View style={styles.inputView}>
+              {/* ... Similar pattern for other icons ... */}
+              <Picker
+                style={styles.input}
+                selectedValue={selectedPanchayat}
+                onValueChange={itemValue => setSelectedPanchayat(itemValue)}>
+                <Picker.Item label="Select Panchayat" value="" />
+                {panchayats.map((panchayat, index) => (
+                  <Picker.Item
+                    key={index}
+                    label={panchayat.panchayat}
+                    value={panchayat.panchayat}
+                  />
+                ))}
+              </Picker>
+            </View>
+          )}
+
+          {/* User District */}
+          {/* <View style={styles.inputView}>
             <Entypo name="home" size={24} color="gray" />
             <TextInput
               placeholderTextColor={'black'}
@@ -487,7 +632,7 @@ const CreateJobList = ({navigation, userData}) => {
               returnKeyType="next"
               onChangeText={text => setDistrict(text)}
             />
-          </View>
+          </View> */}
           {/* Landmark */}
           <View style={styles.inputView}>
             <FontAwesome5 name="landmark" size={24} color="gray" />
@@ -580,7 +725,7 @@ const CreateJobList = ({navigation, userData}) => {
 
           {/* Upload Image */}
           <TouchableOpacity
-            style={{backgroundColor: '#f08518', padding: 15, borderRadius: 10}}
+            style={{ backgroundColor: '#f08518', padding: 15, borderRadius: 10 }}
             onPress={() => setShowModal(true)}>
             <Text
               style={{
@@ -594,9 +739,9 @@ const CreateJobList = ({navigation, userData}) => {
           </TouchableOpacity>
           <View style={styles.inputView}>
             <Image
-              source={{uri: image}}
-              style={{height: 100, width: 100}}
-              imageStyle={{borderRadius: 15}}
+              source={{ uri: image }}
+              style={{ height: 100, width: 100 }}
+              imageStyle={{ borderRadius: 15 }}
             />
           </View>
 
@@ -621,7 +766,7 @@ const CreateJobList = ({navigation, userData}) => {
             {/* Description or notes */}
             <View style={styles.inputView}>
               <TextInput
-              placeholderTextColor={'black'}
+                placeholderTextColor={'black'}
                 value={descriptionDetails}
                 style={styles.input}
                 multiline={true}
@@ -661,7 +806,7 @@ const CreateJobList = ({navigation, userData}) => {
             {/* Time Picker */}
             <TouchableOpacity
               style={styles.inputView}
-              // onPress={() => setTimeOpen(true)}
+            // onPress={() => setTimeOpen(true)}
             >
               <Entypo name="back-in-time" size={24} color="gray" />
               <TextInput

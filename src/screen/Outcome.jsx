@@ -37,10 +37,10 @@ const Outcome = ({navigation, route}) => {
   const {joblistId, userId} = route.params;
   // console.log('Line 39', userId);
   const outComeName = [
-    'Positve',
+    'Positive',
     'Negative',
     'Neutral',
-    'Positve Closed',
+    'Positive Closed',
     'Negative Closed',
   ];
   const followUpName = ['Call', 'Mail', 'Visit'];
