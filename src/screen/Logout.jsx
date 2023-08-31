@@ -1,14 +1,29 @@
-// Logout.js
-
-import React, {useEffect, useState} from 'react';
-import {View, Button, Alert} from 'react-native';
+import { StyleSheet, Text, View ,Button,Alert} from 'react-native'
+import React,{useState,useEffect} from 'react'
+import Header from '../component/Header'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Geolocation from 'react-native-geolocation-service';
-
-const Logout = ({navigation}) => {
+import Axios from 'axios';
+const Logout = ({navigation,userData}) => {
   const [loginTime, setLoginTime] = useState(new Date());
   const handleLogout = async () => {
     try {
+      try {
+        // console.log("Line 92",userData.id);
+        const loginTimeResponse = await Axios.post(
+          'https://crm.aarogyaseva.co.in/api/logouttime',
+          {
+            employeeid: userData.id,
+          },
+        );
+
+        console.log(loginTimeResponse.data,"Line 109");
+      } catch (error) {
+        console.log(
+          'Error sending employeeId to logout Time to API Line 112',
+          error.message,
+        );
+      }
       await AsyncStorage.removeItem('userData');
       navigation.replace('Login');
     } catch (error) {
@@ -69,20 +84,14 @@ const Logout = ({navigation}) => {
       },
     ]);
   };
-
   return (
-    <View
-      style={{
-        flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignSelf: 'center',
-        alignContent: 'center',
-        alignItems: 'center',
-      }}>
+    <View>
+      <Header navigation={navigation}/>
       <Button title="Logout" onPress={showLogoutConfirmation} />
     </View>
-  );
-};
+  )
+}
 
-export default Logout;
+export default Logout
+
+const styles = StyleSheet.create({})

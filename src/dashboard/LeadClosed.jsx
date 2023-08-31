@@ -15,7 +15,7 @@ const LeadClosed = ({navigation, userData}) => {
   const [closedJobList, setClosedJobList] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  console.log('Line 6', userData.id);
+  // console.log('Line 6', userData.id);
 
   const fetchData = () => {
     setIsLoading(true);

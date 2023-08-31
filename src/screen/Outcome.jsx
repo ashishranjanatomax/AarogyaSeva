@@ -8,7 +8,6 @@ import {
   Image,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
-import Header from '../component/Header';
 import {Picker} from '@react-native-picker/picker';
 import Octicons from 'react-native-vector-icons/Octicons';
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -43,7 +42,7 @@ const Outcome = ({navigation, route}) => {
     'Positive Closed',
     'Negative Closed',
   ];
-  const followUpName = ['Call', 'Mail', 'Visit'];
+  const followUpName = ['Call', 'Mail', 'Visit','None'];
   const handleLogout = async () => {
     try {
       await AsyncStorage.removeItem('userData');

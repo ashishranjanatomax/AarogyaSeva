@@ -30,6 +30,7 @@ const Profile = ({navigation, userData}) => {
   const [phone, setPhone] = useState(userData.mobile);
   const [email, setEmail] = useState(userData.email);
   const [address, setAddress] = useState(userData.address);
+  const [roleauthorization,setRoleAuthorization]= useState(userData.roleauthorization)
   const [businessLoaction, setBusinessLocation] = useState(
     userData.areacovered,
   );
@@ -65,6 +66,7 @@ const Profile = ({navigation, userData}) => {
       employmenttype: status,
       address,
       salary,
+      roleauthorization:roleauthorization
     };
     console.log(updatedData, 'Line 63');
 
