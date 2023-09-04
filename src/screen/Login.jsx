@@ -30,6 +30,8 @@ const Login = ({navigation}) => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [locationEnabled, setLocationEnabled] = useState(false);
+  const [latitude,setlatitude] = useState();
+  const [longitude,setLogitude] = useState();
 
   // UseEffect for Checking for loging
   useEffect(() => {
@@ -38,6 +40,8 @@ const Login = ({navigation}) => {
       position => {
         setLocationEnabled(true);
         console.log(position);
+        setlatitude(position.coords.latitude);
+        setLogitude(position.coords.longitude);
       },
       error => {
         setLocationEnabled(false);
@@ -94,6 +98,8 @@ const Login = ({navigation}) => {
             'https://crm.aarogyaseva.co.in/api/logintime',
             {
               employeeid: userData.id,
+              latitude:latitude,
+              longitude:longitude,
             },
           );
 

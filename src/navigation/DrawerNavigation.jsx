@@ -1,10 +1,9 @@
-import {View, Image, Text, Alert} from 'react-native';
-import React, {useState, useEffect} from 'react';
+import {View, Image, Text} from 'react-native';
+import React, {useState} from 'react';
 import {
   createDrawerNavigator,
   DrawerContentScrollView,
   DrawerItemList,
-  DrawerItem,
 } from '@react-navigation/drawer';
 import JobList from '../dashboard/JobList';
 import CreateJobList from '../dashboard/CreateJobList';
