@@ -358,7 +358,7 @@ const CreateJobList = ({navigation, userData}) => {
     <View style={styles.container}>
       <Header navigation={navigation} />
       <ScrollView>
-        <Text style={styles.heading}>Create Job List</Text>
+        <Text style={styles.heading}>Create New Lead</Text>
 
         <View style={styles.textInput}>
           <View style={{flexDirection: 'column'}}>
@@ -617,7 +617,7 @@ const CreateJobList = ({navigation, userData}) => {
               style={styles.input}
               selectedValue={purpose}
               onValueChange={itemValue => setPurpose(itemValue)}>
-              <Picker.Item label="Select Purpose" value="" />
+              <Picker.Item label="Select Prospect" value="" />
               {data.map(item => (
                 <Picker.Item
                   key={item.id}

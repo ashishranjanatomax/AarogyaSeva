@@ -55,14 +55,14 @@ const AdminJobAssigned = ({navigation, userData}) => {
         <Text style={styles.text}>{item.closeby}</Text>
       </View>
       <View style={styles.textHolder}>
-        <Text style={styles.text}>Clouser Date</Text>
+        <Text style={styles.text}>Closure Date</Text>
         <Text style={styles.text}>{item.actualclosure}</Text>
       </View>
 
       <TouchableOpacity
         style={styles.touch}
         onPress={() => navigation.navigate('ClouserDate', {item: item.id,userId:userData.id})}>
-        <Text style={styles.button}>Add Clouser Date</Text>
+        <Text style={styles.button}>Add Closure Date</Text>
       </TouchableOpacity>
     </View>
   );
