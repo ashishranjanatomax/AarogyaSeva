@@ -2,7 +2,6 @@ import {StyleSheet, Alert, BackHandler} from 'react-native';
 import React, {useEffect} from 'react';
 import AuthNavigation from './src/navigation/AuthNavigation';
 import {NavigationContainer} from '@react-navigation/native';
-import OtpModal from './src/component/OtpModal';
 import Geolocation from '@react-native-community/geolocation';
 
 const App = () => {

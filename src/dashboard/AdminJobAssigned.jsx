@@ -5,7 +5,6 @@ import {
   Text,
   TouchableOpacity,
   View,
-  TextInput,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Header from '../component/Header';
@@ -14,8 +13,7 @@ import axios from 'axios';
 const AdminJobAssigned = ({navigation, userData}) => {
   const [assignedJobs, setAssignedJobs] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
-  const [actualDate, setActualDate] = useState('N/A');
-  const [clouserDate, setClouserDate] = useState('');
+ 
 
   const fetchAssignedJobs = async () => {
     try {

@@ -166,9 +166,7 @@ const Profile = ({navigation, userData}) => {
               returnKeyType="next"
               onChangeText={text => setPhone(text)}
             />
-            {/* <TouchableOpacity onPress={() => setShowOtpModalPhone(true)}>
-              <FontAwesome name="edit" size={24} color="gray" />
-            </TouchableOpacity> */}
+            
           </View>
           {/*Home Address */}
           <View style={styles.inputView}>
