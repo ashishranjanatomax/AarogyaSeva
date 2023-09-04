@@ -85,7 +85,6 @@ const Outcome = ({navigation, route}) => {
 
   return (
     <View style={{flex: 1}}>
-      {/* <Header navigation={navigation} /> */}
       <View style={styles.container2}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Ionicons name="arrow-back" size={50} color="#00bc4c" />
@@ -99,7 +98,7 @@ const Outcome = ({navigation, route}) => {
           <Entypo name="log-out" size={50} color="#f08518" />
         </TouchableOpacity>
       </View>
-      <Text style={styles.title}>Out Come for Follow Up</Text>
+      <Text style={styles.title}>Lead Follow Up</Text>
 
       <ScrollView>
         <View style={styles.objectHolder}>
@@ -110,7 +109,7 @@ const Outcome = ({navigation, route}) => {
               style={styles.input}
               selectedValue={outcome}
               onValueChange={itemValue => setOutcome(itemValue)}>
-              <Picker.Item label="Select OutCome" value="" />
+              <Picker.Item label="Select Status" value="" />
               {outComeName.map((outComeName, index) => (
                 <Picker.Item
                   key={index}
@@ -139,7 +138,7 @@ const Outcome = ({navigation, route}) => {
                 style={styles.input}
                 selectedValue={followUp}
                 onValueChange={itemValue => setFollowUp(itemValue)}>
-                <Picker.Item label="Select Follow Up Method" value="" />
+                <Picker.Item label="Next Follow Up Method" value="" />
                 {followUpName.map((outComeName, index) => (
                   <Picker.Item
                     key={index}

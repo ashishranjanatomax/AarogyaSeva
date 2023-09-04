@@ -53,10 +53,10 @@ console.log(item,"Line 11")
                     <Entypo name="log-out" size={50} color="#f08518" />
                 </TouchableOpacity>
             </View>
-            <Text style={styles.heading}>Clouser Details Section</Text>
+            <Text style={styles.heading}>Closure Details Section</Text>
 
             <View style={styles.inputView}>
-                <TextInput onChangeText={(text) => setDate(text)}  style={styles.input} placeholder='Enter Clouser Date' placeholderTextColor="black" />
+                <TextInput onChangeText={(text) => setDate(text)}  style={styles.input} placeholder='Enter Closure Date' placeholderTextColor="black" />
             </View>
             <TouchableOpacity style={styles.touchableOpacityContainer}
             onPress={() => handleSubmit(item)}

@@ -81,7 +81,7 @@ const Profile = ({navigation, userData}) => {
       .then(data => {
         console.log('Line 79', data);
         if (data.status === 200) {
-          Alert.alert('Success', 'Profile Update Sycessfully');
+          Alert.alert('Success', 'Profile Updated Successfully');
           navigation.navigate('JobList');
         } else {
           Alert.alert('Error', 'Faild to update profile');

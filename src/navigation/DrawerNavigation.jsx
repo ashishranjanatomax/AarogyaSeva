@@ -14,6 +14,9 @@ import EmployeePerformance from '../dashboard/EmployeePerformance';
 import Logout from '../screen/Logout';
 import History from '../dashboard/History';
 import AdminJobAssigned from '../dashboard/AdminJobAssigned';
+import SharedLeadbyEmployee from '../dashboard/SharedLeadbyEmployee';
+import LeadHistory from '../dashboard/LeadHistory';
+import TimeSheet from '../dashboard/TimeSheet';
 
 const Drawer = createDrawerNavigator();
 
@@ -65,6 +68,9 @@ const DrawerNavigation = ({route}) => {
       <Drawer.Screen name="Create Lead" options={{headerShown: false}}>
         {props => <CreateJobList {...props} userData={userData} />}
       </Drawer.Screen>
+      <Drawer.Screen name="Shared Lead Creation" options={{headerShown: false}}>
+        {props => <SharedLeadbyEmployee {...props} userData={userData} />}
+      </Drawer.Screen>
       <Drawer.Screen name="Total Worked " options={{headerShown: false}}>
         {props => <History {...props} userData={userData} />}
       </Drawer.Screen>
@@ -73,6 +79,12 @@ const DrawerNavigation = ({route}) => {
       </Drawer.Screen>
       <Drawer.Screen name="Closed Lead " options={{headerShown: false}}>
         {props => <LeadClosed {...props} userData={userData} />}
+      </Drawer.Screen>
+      <Drawer.Screen name="Lead History " options={{headerShown: false}}>
+        {props => <LeadHistory {...props} userData={userData} />}
+      </Drawer.Screen>
+      <Drawer.Screen name="Time Sheet " options={{headerShown: false}}>
+        {props => <TimeSheet {...props} userData={userData} />}
       </Drawer.Screen>
       <Drawer.Screen name="Log Out " options={{headerShown: false}}>
         {props => <Logout {...props} userData={userData} />}
